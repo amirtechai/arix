@@ -1,0 +1,14 @@
+node_modules/
+dist/
+static/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.npmrc
+.DS_Store
+coverage/
+*.log
+packages/arix/bin/
+.wrangler/
+.github/workflows/

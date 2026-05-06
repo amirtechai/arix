@@ -1,0 +1,134 @@
+{
+  "name": "arix-vscode",
+  "displayName": "Arix",
+  "description": "Arix AI coding assistant for VS Code",
+  "version": "0.2.0",
+  "publisher": "arix",
+  "engines": { "vscode": "^1.90.0" },
+  "categories": ["AI", "Programming Languages", "Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "arix",
+          "title": "Arix",
+          "icon": "$(sparkle)"
+        }
+      ]
+    },
+    "views": {
+      "arix": [
+        {
+          "id": "arixSidebar",
+          "name": "Arix",
+          "icon": "$(sparkle)"
+        }
+      ]
+    },
+    "commands": [
+      { "command": "arix.ask",             "title": "Arix: Ask about selection",        "icon": "$(comment-discussion)" },
+      { "command": "arix.fix",             "title": "Arix: Fix selected code",           "icon": "$(tools)" },
+      { "command": "arix.explain",         "title": "Arix: Explain selected code",       "icon": "$(book)" },
+      { "command": "arix.open",            "title": "Arix: Open chat terminal",          "icon": "$(terminal)" },
+      { "command": "arix.openWithContext", "title": "Arix: Open chat with file context", "icon": "$(file-code)" },
+      { "command": "arix.find",            "title": "Arix: Semantic search",             "icon": "$(search)" },
+      { "command": "arix.costHistory",     "title": "Arix: Show cost history",           "icon": "$(history)" },
+      { "command": "arix.costOptimize",    "title": "Arix: Optimize spending",           "icon": "$(lightbulb)" },
+      { "command": "arix.refreshSidebar",  "title": "Arix: Refresh sidebar",             "icon": "$(refresh)" },
+      { "command": "arix.toggleInlineCompletions", "title": "Arix: Toggle inline completions", "icon": "$(sparkle)" }
+    ],
+    "keybindings": [
+      { "command": "arix.ask",  "key": "ctrl+shift+g", "mac": "cmd+shift+g" },
+      { "command": "arix.fix",  "key": "ctrl+shift+f", "mac": "cmd+shift+f", "when": "editorHasSelection" },
+      { "command": "arix.open", "key": "ctrl+shift+t", "mac": "cmd+shift+t" }
+    ],
+    "menus": {
+      "editor/context": [
+        { "command": "arix.ask",     "when": "editorHasSelection", "group": "arix@1" },
+        { "command": "arix.fix",     "when": "editorHasSelection", "group": "arix@2" },
+        { "command": "arix.explain", "when": "editorHasSelection", "group": "arix@3" }
+      ],
+      "view/title": [
+        { "command": "arix.refreshSidebar", "when": "view == arixSidebar", "group": "navigation" }
+      ]
+    },
+    "configuration": {
+      "title": "Arix",
+      "properties": {
+        "arix.provider": {
+          "type": "string",
+          "default": "anthropic",
+          "enum": ["anthropic", "openai", "openrouter", "ollama", "gemini", "azure", "bedrock", "vertex", "nvidia", "minimax"],
+          "description": "AI provider to use"
+        },
+        "arix.model": {
+          "type": "string",
+          "default": "claude-sonnet-4-6",
+          "description": "Model ID to use"
+        },
+        "arix.serverPort": {
+          "type": "number",
+          "default": 50052,
+          "description": "Arix server WebSocket port"
+        },
+        "arix.codeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show Arix actions above function declarations"
+        },
+        "arix.cliPath": {
+          "type": "string",
+          "default": "arix",
+          "description": "Path to the arix CLI executable"
+        },
+        "arix.inlineCompletions.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable AI-powered inline code completions (uses arix complete CLI)"
+        },
+        "arix.inlineCompletions.provider": {
+          "type": "string",
+          "default": "",
+          "description": "Provider override for inline completions (empty = use default)"
+        },
+        "arix.inlineCompletions.model": {
+          "type": "string",
+          "default": "",
+          "description": "Model override for inline completions (empty = use cheap/fast tier)"
+        },
+        "arix.inlineCompletions.maxTokens": {
+          "type": "number",
+          "default": 80,
+          "description": "Max tokens generated per inline completion"
+        },
+        "arix.inlineCompletions.debounceMs": {
+          "type": "number",
+          "default": 350,
+          "description": "Debounce delay before requesting completion (ms)"
+        },
+        "arix.inlineCompletions.timeoutMs": {
+          "type": "number",
+          "default": 4000,
+          "description": "Timeout for completion request (ms)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup src/extension.ts src/sidebar.ts src/codelens.ts src/inline.ts --format cjs --no-splitting --external vscode --out-dir dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.90.0",
+    "@types/ws": "^8.5.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "license": "MIT"
+}

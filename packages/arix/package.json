@@ -1,0 +1,28 @@
+{
+  "name": "arix",
+  "version": "0.1.0",
+  "description": "Arix — the world's best AI coding CLI. Provider-agnostic: Claude, GPT-4, Gemini, Llama, and more.",
+  "keywords": ["ai", "coding", "cli", "llm", "anthropic", "openai", "gemini", "ollama", "copilot"],
+  "homepage": "https://github.com/amirtechai/arix",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amirtechai/arix.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "arix": "./bin/arix.js"
+  },
+  "scripts": {
+    "build": "node -e \"require('fs').mkdirSync('bin', {recursive:true}); require('fs').writeFileSync('bin/arix.js', '#!/usr/bin/env node\\nimport \\\"@arix/cli\\\";\\n'); require('fs').chmodSync('bin/arix.js', 0o755);\""
+  },
+  "dependencies": {
+    "@arix/cli": "workspace:*"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

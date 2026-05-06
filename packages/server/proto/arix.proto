@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package arix.v1;
+
+// ── Chat Service ──────────────────────────────────────────────────────────────
+
+service ChatService {
+  // Bidirectional streaming: client sends turns, server streams chunks
+  rpc Chat(stream ChatRequest) returns (stream ChatResponse);
+  // Unary: run a single-turn exchange to completion
+  rpc Run(RunRequest) returns (stream RunResponse);
+}
+
+// ── Session Service ───────────────────────────────────────────────────────────
+
+service SessionService {
+  rpc List(ListSessionsRequest) returns (ListSessionsResponse);
+  rpc Get(GetSessionRequest) returns (GetSessionResponse);
+  rpc Delete(DeleteSessionRequest) returns (DeleteSessionResponse);
+}
+
+// ── Chat messages ─────────────────────────────────────────────────────────────
+
+message ChatRequest {
+  string user_message = 1;
+  string model = 2;
+  string provider = 3;
+  string skill = 4;
+  string session_id = 5;  // resume existing session
+}
+
+message ChatResponse {
+  oneof payload {
+    TextChunk text = 1;
+    ToolCall tool_call = 2;
+    ToolResult tool_result = 3;
+    ErrorChunk error = 4;
+    DoneChunk done = 5;
+  }
+}
+
+message RunRequest {
+  string prompt = 1;
+  string model = 2;
+  string provider = 3;
+  string skill = 4;
+  int32 max_turns = 5;
+}
+
+message RunResponse {
+  oneof payload {
+    TextChunk text = 1;
+    ToolCall tool_call = 2;
+    ToolResult tool_result = 3;
+    ErrorChunk error = 4;
+    DoneChunk done = 5;
+  }
+}
+
+// ── Chunk types ───────────────────────────────────────────────────────────────
+
+message TextChunk {
+  string text = 1;
+}
+
+message ToolCall {
+  string id = 1;
+  string name = 2;
+  string input_json = 3;
+}
+
+message ToolResult {
+  string tool_call_id = 1;
+  bool success = 2;
+  string output = 3;
+  string error = 4;
+}
+
+message ErrorChunk {
+  string message = 1;
+}
+
+message DoneChunk {
+  string session_id = 1;
+}
+
+// ── Session messages ──────────────────────────────────────────────────────────
+
+message ListSessionsRequest {
+  int32 limit = 1;
+}
+
+message ListSessionsResponse {
+  repeated SessionInfo sessions = 1;
+}
+
+message GetSessionRequest {
+  string id = 1;
+}
+
+message GetSessionResponse {
+  SessionInfo session = 1;
+  repeated Message messages = 2;
+}
+
+message DeleteSessionRequest {
+  string id = 1;
+}
+
+message DeleteSessionResponse {
+  bool success = 1;
+}
+
+message SessionInfo {
+  string id = 1;
+  string title = 2;
+  int64 created_at = 3;
+  int64 updated_at = 4;
+  int32 message_count = 5;
+}
+
+message Message {
+  string role = 1;
+  string content = 2;
+  int64 timestamp = 3;
+}
