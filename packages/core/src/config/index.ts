@@ -47,11 +47,21 @@ export class ConfigManager {
 
   private startWatcher(): void {
     if (this.watcher || !existsSync(this.configPath)) return
-    this.watcher = watch(this.configPath, () => {
-      this.cache = null // invalidate on external change
-    })
-    // Allow process to exit even if watcher is open
-    this.watcher.unref()
+    // fs.watch can fail with EPERM on Windows runners and EACCES on some
+    // sandboxed Linux setups. Watching is a best-effort optimisation — the
+    // cache reload-on-error path still works, so swallow.
+    try {
+      this.watcher = watch(this.configPath, () => {
+        this.cache = null
+      })
+      this.watcher.on('error', () => {
+        try { this.watcher?.close() } catch { /* ignore */ }
+        this.watcher = null
+      })
+      this.watcher.unref()
+    } catch {
+      this.watcher = null
+    }
   }
 
   async load(): Promise<ArixConfig> {
