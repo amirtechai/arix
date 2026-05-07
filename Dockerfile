@@ -12,9 +12,12 @@ COPY packages/core/package.json packages/core/
 COPY packages/providers/package.json packages/providers/
 COPY packages/tools/package.json packages/tools/
 COPY packages/cli/package.json packages/cli/
+COPY packages/tui/package.json packages/tui/
 COPY packages/dashboard/package.json packages/dashboard/
 COPY packages/server/package.json packages/server/
 COPY packages/wiki/package.json packages/wiki/
+COPY packages/arix/package.json packages/arix/
+COPY packages/vscode-ext/package.json packages/vscode-ext/
 
 # Install dependencies (frozen lockfile for reproducibility)
 RUN pnpm install --frozen-lockfile --ignore-scripts
