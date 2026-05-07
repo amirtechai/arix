@@ -23,8 +23,7 @@ import type { AgentEvent } from '@arix-code/core'
 
 const exec = promisify(execFile)
 
-const _PHASES = ['RED', 'GREEN', 'REFACTOR'] as const
-type Phase = typeof PHASES[number]
+type Phase = 'RED' | 'GREEN' | 'REFACTOR'
 
 export function registerTdd(program: Command): void {
   program
