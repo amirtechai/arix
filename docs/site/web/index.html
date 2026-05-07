@@ -14,39 +14,41 @@
   <meta name="twitter:card" content="summary_large_image" />
   <style>
     :root {
-      /* pastel mint scale (lighter → deeper) */
-      --turq-50:  #EAF8F1;
-      --turq-100: #D4F1E2;
-      --turq-200: #B8E6CA;
-      --turq-300: #9FDCB6;
-      --turq-400: #82CFA0;  /* logo mint */
-      --turq-500: #6BC18C;
-      --turq-600: #4FA572;
-      --turq-700: #3A8559;
-      --turq-800: #2A5F40;
-      --turq-900: #16321F;
+      /* mint scale (lighter → deeper), tuned warm-pastel */
+      --turq-50:  #EEF8F2;
+      --turq-100: #DBF0E2;
+      --turq-200: #C2E5CD;
+      --turq-300: #A6D8B5;
+      --turq-400: #88CB9E;  /* logo mint, softened */
+      --turq-500: #6FBC87;
+      --turq-600: #54A06D;
+      --turq-700: #3F8458;
+      --turq-800: #2D5F40;
+      --turq-900: #173420;
 
-      /* pastel accents (used sparingly) */
-      --peach:    #F5C8B4;
-      --lavender: #C7BFEA;
-      --butter:   #F4E5B0;
+      /* warm accent palette (used sparingly) */
+      --peach:    #F0BFA8;   /* warm complement to mint */
+      --lavender: #BCB3DC;   /* cool complement */
+      --butter:   #EFD89E;   /* warm highlight */
+      --rose:     #E5A69E;
 
-      /* neutral dark surfaces (no green tint) */
-      --ink:      #ECECEE;
-      --ink-soft: #C7C7CB;
-      --muted:    #8A8A90;
-      --line:     #232328;
-      --bg:       #0D0D10;
-      --bg-soft:  #131317;
-      --surface:  #18181C;
-      --surface-2:#1E1E23;
-      --code-bg:  #07070A;
-      --code-fg:  #D4F1E2;
-      --shadow:   0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
-      --shadow-lg:0 4px 14px rgba(0,0,0,.5), 0 24px 60px rgba(0,0,0,.55);
-      --radius:   14px;
-      --radius-sm:8px;
-      --max-w:    1180px;
+      /* neutral dark surfaces — slightly warm, no green tint */
+      --ink:       #F2F2F4;
+      --ink-soft:  #C6C6CC;
+      --muted:     #84848C;
+      --line:      #2A2A32;
+      --line-soft: #202026;
+      --bg:        #0B0B0E;
+      --bg-soft:   #111116;
+      --surface:   #17171C;
+      --surface-2: #1E1E25;
+      --code-bg:   #08080B;
+      --code-fg:   #D4F1E2;
+      --shadow:    0 1px 2px rgba(0,0,0,.45), 0 8px 24px rgba(0,0,0,.40);
+      --shadow-lg: 0 6px 18px rgba(0,0,0,.55), 0 28px 70px rgba(0,0,0,.60);
+      --radius:    14px;
+      --radius-sm: 8px;
+      --max-w:     1180px;
     }
 
     * { box-sizing: border-box; }
@@ -73,7 +75,7 @@
     /* ───── nav ───── */
     .nav {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(13, 13, 16, 0.75);
+      background: rgba(11, 11, 14, 0.75);
       backdrop-filter: saturate(160%) blur(14px);
       -webkit-backdrop-filter: saturate(160%) blur(14px);
       border-bottom: 1px solid var(--line);
@@ -115,7 +117,8 @@
       opacity: 0.6; pointer-events: none;
     }
     .hero-inner { position: relative; z-index: 1; text-align: center; max-width: 900px; margin: 0 auto; padding: 0 24px; }
-    .hero-logo { width: 120px; height: 120px; border-radius: 24px; margin-bottom: 22px; box-shadow: 0 12px 40px rgba(130, 207, 160, 0.18); }
+    .hero-logo { width: 220px; height: 220px; border-radius: 32px; margin-bottom: 28px; box-shadow: 0 18px 60px rgba(130, 207, 160, 0.20); object-fit: cover; }
+    @media (max-width: 720px) { .hero-logo { width: 160px; height: 160px; border-radius: 24px; } }
     .badge {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(130, 207, 160, 0.10); color: var(--turq-200);
