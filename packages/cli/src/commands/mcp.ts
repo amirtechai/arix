@@ -208,6 +208,40 @@ export function registerMcp(program: Command): void {
 
   // ── mcp enable / disable ─────────────────────────────────────────────────
 
+  // ── mcp status (O7) ──────────────────────────────────────────────────────
+
+  mcp
+    .command('status')
+    .description('Ping every enabled MCP server and report tool count + latency')
+    .action(async () => {
+      const reg = makeRegistry()
+      await reg.load()
+      const servers = reg.getServers().filter((s) => s.enabled !== false)
+      if (servers.length === 0) {
+        process.stdout.write('No enabled MCP servers.\n')
+        return
+      }
+      const results = await Promise.all(servers.map(async (cfg) => {
+        const start = Date.now()
+        try {
+          const client = new McpClient(cfg)
+          await client.connect()
+          const ms = Date.now() - start
+          const count = client.tools.length
+          client.disconnect()
+          return { name: cfg.name, ok: true, ms, count, error: null as string | null }
+        } catch (err) {
+          return { name: cfg.name, ok: false, ms: Date.now() - start, count: 0, error: err instanceof Error ? err.message : String(err) }
+        }
+      }))
+      process.stdout.write('\nMCP server status:\n\n')
+      for (const r of results) {
+        const icon = r.ok ? '●' : '○'
+        process.stdout.write(`  ${icon} ${r.name.padEnd(22)} ${r.ok ? `${r.count} tool${r.count === 1 ? '' : 's'}, ${r.ms}ms` : `error: ${r.error}`}\n`)
+      }
+      process.stdout.write('\n')
+    })
+
   // ── mcp catalog ──────────────────────────────────────────────────────────
 
   mcp

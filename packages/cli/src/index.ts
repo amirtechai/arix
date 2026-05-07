@@ -37,6 +37,7 @@ import { registerSpec } from './commands/spec.js'
 import { registerEval } from './commands/eval.js'
 import { registerDrift } from './commands/drift.js'
 import { registerRedact } from './commands/redact.js'
+import { registerReplay } from './commands/replay.js'
 
 installGlobalErrorHandlers()
 
@@ -50,7 +51,7 @@ const SUBCOMMANDS = new Set([
   'completions', 'tools', 'fix', 'loop', 'serve', 'feature', 'provider',
   'profile', 'wiki', 'pr', 'review', 'tdd', 'models', 'cost', 'memory',
   'plugin', 'mcp', 'ask', 'design', 'team', 'build', 'find',
-  'undo', 'workspace', 'ws', 'spec', 'eval', 'drift', 'redact',
+  'undo', 'workspace', 'ws', 'spec', 'eval', 'drift', 'redact', 'replay',
   'help', '--help', '-h', '--version', '-V',
 ])
 
@@ -122,5 +123,6 @@ registerSpec(program)
 registerEval(program)
 registerDrift(program)
 registerRedact(program)
+registerReplay(program)
 
 program.parse()
