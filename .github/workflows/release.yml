@@ -49,6 +49,9 @@ jobs:
         run: pnpm -r publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # @arix/* scope must exist on npmjs.com before this can succeed.
+        # Until then we want the GitHub release to still happen.
+        continue-on-error: true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

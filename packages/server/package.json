@@ -1,6 +1,6 @@
 {
   "name": "@arix/server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Arix gRPC server",
   "type": "module",
   "main": "./dist/index.js",
