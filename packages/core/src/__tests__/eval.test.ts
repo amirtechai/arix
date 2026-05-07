@@ -68,11 +68,7 @@ describe('golden trace diff', () => {
 
 describe('skillRegressionSuite', () => {
   it('passes for all bundled skills', async () => {
-    const { fileURLToPath } = await import('node:url')
-    const { dirname, join } = await import('node:path')
-    const here = dirname(fileURLToPath(import.meta.url))
-    const bundled = join(here, '..', 'skills', 'bundled')
-    const suite = await skillRegressionSuite(bundled)
+    const suite = await skillRegressionSuite()
     const r = await runSuite(suite)
     expect(r.failed).toBe(0)
     expect(r.passed).toBeGreaterThan(0)

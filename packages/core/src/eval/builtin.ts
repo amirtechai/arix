@@ -17,7 +17,7 @@ import type { Provider } from '../provider/index.js'
 export async function skillRegressionSuite(bundledDir?: string): Promise<EvalSuite<{ skill: string }, string>> {
   const sm = new SkillManager()
   if (bundledDir) await sm.loadFromDirectory(bundledDir)
-  else await sm.loadBundled()
+  else sm.loadBundled()
 
   return {
     name: 'skill-regression',
