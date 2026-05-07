@@ -11,7 +11,7 @@
  */
 
 import type { Command } from 'commander'
-import { CostTracker, ModelCatalogue } from '@arix/core'
+import { CostTracker, ModelCatalogue, bySkill, regression, tokenPreflight } from '@arix/core'
 
 export function registerCost(program: Command): void {
   const cmd = program
@@ -263,6 +263,69 @@ export function registerCost(program: Command): void {
         console.log('\n💡 Tip: Use --profile local or --provider ollama for simple tasks → free, runs on your machine')
         console.log('   arix config set profile budget  ← auto-routes simple tasks to Ollama')
       }
+    })
+
+  // ── by-skill (P2) ────────────────────────────────────────────────────────
+  cmd
+    .command('by-skill')
+    .description('Aggregate spend by skill (sessions tagged with a skill name)')
+    .action(async () => {
+      const ledger = await CostTracker.loadLedger() as Array<Awaited<ReturnType<typeof CostTracker.loadLedger>>[number] & { skill?: string }>
+      if (ledger.length === 0) { console.log('No cost data yet.'); return }
+      const rows = bySkill(ledger)
+      console.log('\nSpend by skill:\n')
+      console.log('Skill'.padEnd(28) + 'Sessions'.padEnd(10) + 'Total'.padEnd(14) + 'Avg/session')
+      console.log('─'.repeat(70))
+      for (const r of rows) {
+        console.log(
+          r.skill.slice(0, 26).padEnd(28) +
+          String(r.sessions).padEnd(10) +
+          `$${r.totalUsd.toFixed(4)}`.padEnd(14) +
+          `$${r.avgUsdPerSession.toFixed(4)}`,
+        )
+      }
+    })
+
+  // ── regression alert (P3) ────────────────────────────────────────────────
+  cmd
+    .command('regression')
+    .description('Compare last 7-day spend vs. prior 7 days; alert on regression')
+    .option('--factor <n>', 'Multiplier that triggers an alert', '2')
+    .action(async (opts: { factor: string }) => {
+      const ledger = await CostTracker.loadLedger()
+      const factor = parseFloat(opts.factor)
+      const r = regression(ledger, { factor })
+      console.log(`\nThis week:  $${r.thisWeekUsd.toFixed(4)}`)
+      console.log(`Prior week: $${r.priorWeekUsd.toFixed(4)}`)
+      const mult = isFinite(r.multiplier) ? r.multiplier.toFixed(2) + '×' : '∞'
+      console.log(`Multiplier: ${mult}`)
+      if (r.alert) {
+        console.log(`\n⚠ ALERT — ${r.reason}`)
+        process.exitCode = 1
+      } else {
+        console.log('\n✓ no regression')
+      }
+    })
+
+  // ── preflight (P6) ───────────────────────────────────────────────────────
+  cmd
+    .command('preflight <prompt>')
+    .description('Estimate input tokens and USD cost before sending a turn')
+    .option('--provider <name>', 'Provider id', 'anthropic')
+    .option('--model <id>', 'Model id', 'claude-sonnet-4-6')
+    .option('--max-output <n>', 'Max output tokens', '1024')
+    .action((prompt: string, opts: { provider: string; model: string; maxOutput: string }) => {
+      const r = tokenPreflight({
+        prompt,
+        provider: opts.provider,
+        model: opts.model,
+        maxOutputTokens: parseInt(opts.maxOutput, 10),
+      })
+      console.log(`\nProvider/Model:  ${opts.provider}/${opts.model}`)
+      console.log(`Est input:       ${r.estInputTokens} tokens (~${r.ratio} chars/tok)`)
+      console.log(`Max output:      ${r.maxOutputTokens} tokens`)
+      const usd = r.estCostUsd === null ? 'unknown (no pricing)' : `$${r.estCostUsd.toFixed(6)}`
+      console.log(`Est cost:        ${usd}`)
     })
 
   // ── compare: estimate cost for a prompt across multiple models ───────────
