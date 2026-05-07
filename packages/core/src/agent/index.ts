@@ -3,6 +3,8 @@ export type { AgentEvent }
 import type { CostTracker } from '../cost/index.js'
 import type { ContextCompactor } from '../compact/index.js'
 import { estimateTokens } from '../compact/index.js'
+import type { HardBudget } from './budget.js'
+import { BudgetExceededError } from './budget.js'
 
 export interface AgentLoopOptions {
   provider: {
@@ -19,6 +21,8 @@ export interface AgentLoopOptions {
   costTracker?: CostTracker
   compactor?: ContextCompactor
   summariser?: (transcript: string) => Promise<string>
+  /** Hard kill-switch — when set, agent stops gracefully on budget exceedance */
+  budget?: HardBudget
 }
 
 export class AgentLoop {
@@ -33,6 +37,7 @@ export class AgentLoop {
   private readonly costTracker: CostTracker | undefined
   private readonly compactor: ContextCompactor | undefined
   private readonly summariser: ((transcript: string) => Promise<string>) | undefined
+  private readonly budget: HardBudget | undefined
   private history: Message[]
 
   constructor(opts: AgentLoopOptions) {
@@ -47,6 +52,7 @@ export class AgentLoop {
     this.costTracker = opts.costTracker
     this.compactor = opts.compactor
     this.summariser = opts.summariser
+    this.budget = opts.budget
     this.history = opts.initialMessages ? [...opts.initialMessages] : []
   }
 
@@ -90,6 +96,18 @@ export class AgentLoop {
             (text.length + toolCalls.reduce((n, tc) => n + JSON.stringify(tc.input).length, 0)) / 4
           )
           this.costTracker.record(inputTokens, outputTokens)
+          if (this.budget) {
+            try { this.budget.check() }
+            catch (err) {
+              if (err instanceof BudgetExceededError) {
+                yield { type: 'text', chunk: `\n[Hard budget reached: ${err.message} — stopping.]\n` }
+                this.history = messages
+                yield { type: 'done' }
+                return
+              }
+              throw err
+            }
+          }
         }
 
         // Accumulate assistant message with ContentBlocks
