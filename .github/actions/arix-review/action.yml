@@ -1,0 +1,97 @@
+name: 'Arix PR Review'
+description: 'Run an automated code review on the changed files of a pull request using arix.'
+author: 'amirtechai'
+branding:
+  icon: 'check-circle'
+  color: 'purple'
+
+inputs:
+  provider:
+    description: 'Provider id (anthropic, openai, deepseek, ...)'
+    required: false
+    default: 'anthropic'
+  model:
+    description: 'Model id'
+    required: false
+    default: 'claude-sonnet-4-6'
+  api-key:
+    description: 'API key for the chosen provider (use secrets!)'
+    required: true
+  skill:
+    description: 'Skill to use as the system prompt'
+    required: false
+    default: 'code-reviewer'
+  fail-on-blocker:
+    description: 'Fail the workflow if 🔴 BLOCKER appears in review output'
+    required: false
+    default: 'true'
+  comment:
+    description: 'Post the review as a PR comment'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Install arix
+      shell: bash
+      run: npm i -g arix
+
+    - name: Get changed files
+      id: changes
+      shell: bash
+      run: |
+        git fetch origin ${{ github.event.pull_request.base.ref }}
+        files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | tr '\n' ' ')
+        echo "files=$files" >> "$GITHUB_OUTPUT"
+
+    - name: Run arix review
+      id: review
+      shell: bash
+      env:
+        ANTHROPIC_API_KEY: ${{ inputs.api-key }}
+        OPENAI_API_KEY:    ${{ inputs.api-key }}
+        DEEPSEEK_API_KEY:  ${{ inputs.api-key }}
+        GROQ_API_KEY:      ${{ inputs.api-key }}
+        XAI_API_KEY:       ${{ inputs.api-key }}
+      run: |
+        out=$(arix review --provider ${{ inputs.provider }} --model ${{ inputs.model }} --skill ${{ inputs.skill }} --files "${{ steps.changes.outputs.files }}" || true)
+        echo "$out" > /tmp/arix-review.md
+        {
+          echo "review<<ARIX_EOF"
+          echo "$out"
+          echo "ARIX_EOF"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Post comment
+      if: ${{ inputs.comment == 'true' && github.event.pull_request }}
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs')
+          const body = fs.readFileSync('/tmp/arix-review.md', 'utf-8')
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            body: '## 🤖 Arix review\n\n' + body,
+          })
+
+    - name: Fail on blocker
+      if: ${{ inputs.fail-on-blocker == 'true' }}
+      shell: bash
+      run: |
+        if grep -q '🔴 BLOCKER' /tmp/arix-review.md; then
+          echo "::error::Arix found a blocker — see review comment"
+          exit 1
+        fi
