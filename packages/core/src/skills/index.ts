@@ -1,6 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
-import { join, basename } from 'node:path'
+import { join, basename, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 export interface SkillDefinition {
   name: string
@@ -118,4 +119,36 @@ export class SkillManager {
       this.register({ name, description, systemPrompt: body })
     }
   }
+
+  /** Load the first-party bundled skill library shipped inside @arix/core. */
+  async loadBundled(): Promise<void> {
+    const here = currentDir()
+    const candidates = [
+      join(here, 'bundled'),
+      join(here, 'skills', 'bundled'),
+      join(here, '..', 'skills', 'bundled'),
+      join(here, '..', '..', 'src', 'skills', 'bundled'),
+    ]
+    for (const dir of candidates) {
+      if (existsSync(dir)) {
+        await this.loadFromDirectory(dir)
+        return
+      }
+    }
+  }
+}
+
+function currentDir(): string {
+  // CJS path
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dn = (globalThis as any).__dirname as string | undefined
+  if (dn) return dn
+  // ESM path — read import.meta.url through a Function constructor so the
+  // CJS bundler doesn't try to rewrite it.
+  try {
+    const getUrl = new Function('return import.meta.url') as () => string
+    const url = getUrl()
+    if (url) return dirname(fileURLToPath(url))
+  } catch { /* fall through */ }
+  return process.cwd()
 }
