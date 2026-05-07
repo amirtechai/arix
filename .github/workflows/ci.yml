@@ -63,6 +63,10 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: E2E smoke test
+        if: matrix.os != 'windows-latest'
+        run: bash scripts/smoke.sh
+
   lint:
     name: Lint & Audit
     runs-on: ubuntu-latest
