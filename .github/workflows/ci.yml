@@ -42,6 +42,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build
+        run: pnpm build
+
       - name: Typecheck
         run: pnpm typecheck
 
@@ -59,9 +62,6 @@ jobs:
           files: packages/cli/coverage/lcov.info
           flags: cli
           fail_ci_if_error: false
-
-      - name: Build
-        run: pnpm build
 
       - name: E2E smoke test
         if: matrix.os != 'windows-latest'
