@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { StreamState } from '../hooks/StreamState.js'
-import type { AgentEvent } from '@arix/core'
+import type { AgentEvent } from '@arix-code/core'
 import type { ChatMessage } from '../types.js'
 
 async function* makeEvents(events: AgentEvent[]): AsyncGenerator<AgentEvent> {

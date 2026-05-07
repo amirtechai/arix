@@ -1,6 +1,6 @@
 import OpenAI from 'openai'
-import { BaseProvider, ArixError } from '@arix/core'
-import type { ContentBlock, ModelInfo, ChatRequest, Message, StreamChunk } from '@arix/core'
+import { BaseProvider, ArixError } from '@arix-code/core'
+import type { ContentBlock, ModelInfo, ChatRequest, Message, StreamChunk } from '@arix-code/core'
 
 function mapOpenAIError(err: unknown, provider = 'openai'): never {
   if (err instanceof ArixError) throw err

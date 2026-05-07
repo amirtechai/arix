@@ -6,7 +6,7 @@
 import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 interface FileCov {
   path: string

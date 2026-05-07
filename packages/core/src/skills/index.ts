@@ -121,7 +121,7 @@ export class SkillManager {
   }
 
   /**
-   * Load the first-party bundled skill library compiled into @arix/core.
+   * Load the first-party bundled skill library compiled into @arix-code/core.
    * Source of truth: packages/core/src/skills/bundled/*.md, generated into
    * bundled-content.ts by scripts/generate-bundled-skills.ts.
    */

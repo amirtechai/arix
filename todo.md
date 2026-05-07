@@ -92,7 +92,7 @@ Output: all config files with correct content. No placeholder TODOs.
 ```
 [MASTER CONTEXT above]
 
-Define all shared TypeScript types and interfaces for @arix/core.
+Define all shared TypeScript types and interfaces for @arix-code/core.
 
 File: packages/core/src/types.ts
 
@@ -122,7 +122,7 @@ No `any` types. Use discriminated unions where appropriate.
 ```
 [MASTER CONTEXT above]
 
-Implement the Provider interface and BaseProvider abstract class in @arix/core.
+Implement the Provider interface and BaseProvider abstract class in @arix-code/core.
 
 File: packages/core/src/provider/index.ts
 
@@ -990,7 +990,7 @@ Global error handling:
   - CONTEXT_TOO_LONG → "Conversation too long. Starting compression..."
 
 LogManager singleton in packages/core/src/logger/index.ts
-Used throughout all packages via import { logger } from '@arix/core'
+Used throughout all packages via import { logger } from '@arix-code/core'
 ```
 
 ---

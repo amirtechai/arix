@@ -17,7 +17,7 @@ jobs:
       pull-requests: write   # to comment
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - uses: amirtechai/arix/.github/actions/arix-review@main

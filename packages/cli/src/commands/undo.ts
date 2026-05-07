@@ -1,5 +1,5 @@
 import type { Command } from 'commander'
-import { UndoStack } from '@arix/core'
+import { UndoStack } from '@arix-code/core'
 
 export function registerUndo(program: Command): void {
   const undo = program

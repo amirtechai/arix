@@ -3,7 +3,7 @@ import cors from 'cors'
 import { join } from 'node:path'
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { SessionManager } from '@arix/core'
+import { SessionManager } from '@arix-code/core'
 import { createApiRouter } from './routes.js'
 
 export interface DashboardOptions {

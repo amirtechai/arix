@@ -1,7 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect} from 'vitest'
 import { ToolRegistry, ToolExecutor } from '../base/index.js'
-import { ArixError } from '@arix/core'
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 function makeTool(name: string, requiresConfirmation = false): Tool {
   return {

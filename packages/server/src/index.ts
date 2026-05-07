@@ -4,11 +4,11 @@ import { createRequire } from 'node:module'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { homedir } from 'node:os'
-import { AgentLoop, ConfigManager, SkillManager, SessionManager, logger } from '@arix/core'
-import type { AgentEvent, Session } from '@arix/core'
-import { ProviderFactory } from '@arix/providers'
-import { ReadFileTool, WriteFileTool, ListDirectoryTool, ShellExecTool } from '@arix/tools'
-import { GitStatusTool, GitDiffTool, GitCommitTool, GitBranchTool } from '@arix/tools'
+import { AgentLoop, ConfigManager, SkillManager, SessionManager, logger } from '@arix-code/core'
+import type { AgentEvent, Session } from '@arix-code/core'
+import { ProviderFactory } from '@arix-code/providers'
+import { ReadFileTool, WriteFileTool, ListDirectoryTool, ShellExecTool } from '@arix-code/tools'
+import { GitStatusTool, GitDiffTool, GitCommitTool, GitBranchTool } from '@arix-code/tools'
 
 // ── Proto loading ─────────────────────────────────────────────────────────────
 

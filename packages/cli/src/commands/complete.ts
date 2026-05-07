@@ -12,9 +12,9 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { ConfigManager, ModelCatalogue } from '@arix/core'
-import { ProviderFactory } from '@arix/providers'
-import type { Message } from '@arix/core'
+import { ConfigManager, ModelCatalogue } from '@arix-code/core'
+import { ProviderFactory } from '@arix-code/providers'
+import type { Message } from '@arix-code/core'
 
 const SYSTEM_PROMPT = `You are a code completion engine. Output ONLY the code that should be inserted at the cursor — no prose, no markdown fences, no explanations, no leading/trailing whitespace beyond what is syntactically required. If nothing useful can be predicted, output nothing.`
 

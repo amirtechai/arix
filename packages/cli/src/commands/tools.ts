@@ -1,7 +1,7 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { MarketplaceClient } from '@arix/core'
+import { MarketplaceClient } from '@arix-code/core'
 
 export function registerTools(program: Command): void {
   const toolsCmd = program

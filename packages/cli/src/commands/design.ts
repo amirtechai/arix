@@ -20,7 +20,7 @@ import type { Command } from 'commander'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { bootstrap } from '../bootstrap.js'
-import type { AgentEvent } from '@arix/core'
+import type { AgentEvent } from '@arix-code/core'
 
 // ── ANSI ────────────────────────────────────────────────────────────────────
 

@@ -56,7 +56,7 @@ describe('scrub (sensitive field redaction)', () => {
   it('redacts nested sensitive keys', async () => {
     // Test via the log output directly
     const writtenLines: string[] = []
-    const origWrite = process.stdout.write.bind(process.stdout)
+    const _origWrite = process.stdout.write.bind(process.stdout)
     vi.spyOn(process.stdout, 'write').mockImplementation((chunk) => {
       writtenLines.push(String(chunk))
       return true

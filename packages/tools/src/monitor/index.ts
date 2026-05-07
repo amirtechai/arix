@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process'
 import { EventEmitter } from 'node:events'
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 // ── ProcessMonitor (event emitter) ───────────────────────────────────────────
 

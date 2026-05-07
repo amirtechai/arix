@@ -1,6 +1,6 @@
 import { program } from 'commander'
 import { createRequire } from 'node:module'
-import { installGlobalErrorHandlers, logger } from '@arix/core'
+import { installGlobalErrorHandlers, logger } from '@arix-code/core'
 import { registerChat } from './commands/chat.js'
 import { registerConfig } from './commands/config.js'
 import { registerSession } from './commands/session.js'

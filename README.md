@@ -25,7 +25,7 @@ Arix lets you chat with any LLM (Anthropic Claude, OpenAI, Ollama, OpenRouter, G
 ## Installation
 
 ```bash
-npm install -g @arix/cli
+npm install -g @arix-code/cli
 ```
 
 Or build from source:

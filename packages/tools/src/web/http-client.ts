@@ -1,4 +1,4 @@
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 const MAX_BODY = 200 * 1024
 const TIMEOUT_MS = 30_000

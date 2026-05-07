@@ -38,31 +38,31 @@ importers:
 
   packages/arix:
     dependencies:
-      '@arix/cli':
+      '@arix-code/cli':
         specifier: workspace:*
         version: link:../cli
 
   packages/cli:
     dependencies:
-      '@arix/core':
+      '@arix-code/core':
         specifier: workspace:*
         version: link:../core
-      '@arix/dashboard':
+      '@arix-code/dashboard':
         specifier: workspace:*
         version: link:../dashboard
-      '@arix/providers':
+      '@arix-code/providers':
         specifier: workspace:*
         version: link:../providers
-      '@arix/server':
+      '@arix-code/server':
         specifier: workspace:*
         version: link:../server
-      '@arix/tools':
+      '@arix-code/tools':
         specifier: workspace:*
         version: link:../tools
-      '@arix/tui':
+      '@arix-code/tui':
         specifier: workspace:*
         version: link:../tui
-      '@arix/wiki':
+      '@arix-code/wiki':
         specifier: workspace:*
         version: link:../wiki
       commander:
@@ -108,10 +108,10 @@ importers:
 
   packages/dashboard:
     dependencies:
-      '@arix/core':
+      '@arix-code/core':
         specifier: workspace:*
         version: link:../core
-      '@arix/providers':
+      '@arix-code/providers':
         specifier: workspace:*
         version: link:../providers
       cors:
@@ -175,7 +175,7 @@ importers:
       '@anthropic-ai/sdk':
         specifier: ^0.39.0
         version: 0.39.0
-      '@arix/core':
+      '@arix-code/core':
         specifier: workspace:*
         version: link:../core
       '@google/generative-ai':
@@ -197,13 +197,13 @@ importers:
 
   packages/server:
     dependencies:
-      '@arix/core':
+      '@arix-code/core':
         specifier: workspace:*
         version: link:../core
-      '@arix/providers':
+      '@arix-code/providers':
         specifier: workspace:*
         version: link:../providers
-      '@arix/tools':
+      '@arix-code/tools':
         specifier: workspace:*
         version: link:../tools
       '@grpc/grpc-js':
@@ -228,7 +228,7 @@ importers:
 
   packages/tools:
     dependencies:
-      '@arix/core':
+      '@arix-code/core':
         specifier: workspace:*
         version: link:../core
       glob:
@@ -262,7 +262,7 @@ importers:
 
   packages/tui:
     dependencies:
-      '@arix/core':
+      '@arix-code/core':
         specifier: workspace:*
         version: link:../core
       chalk:

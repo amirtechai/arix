@@ -6,7 +6,7 @@
  * pragma_* are allowed.
  */
 
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 import { truncate } from '../shell/exec.js'
 
 const READ_ONLY_RE = /^\s*(SELECT|WITH|EXPLAIN|SHOW|PRAGMA|DESCRIBE|DESC)\b/i
@@ -36,7 +36,7 @@ async function runSqlite(file: string, sql: string, params: unknown[]): Promise<
 }
 
 // `pg` and `mysql2` are optional peer deps loaded lazily — using `any` here
-// avoids forcing the user to install them just to typecheck @arix/tools.
+// avoids forcing the user to install them just to typecheck @arix-code/tools.
 
 async function runPostgres(connStr: string, sql: string, params: unknown[]): Promise<QueryRow[]> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

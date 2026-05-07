@@ -15,7 +15,7 @@ import type { Command } from 'commander'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { bootstrap } from '../bootstrap.js'
-import type { AgentEvent } from '@arix/core'
+import type { AgentEvent } from '@arix-code/core'
 
 const exec = promisify(execFile)
 

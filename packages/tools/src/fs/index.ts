@@ -3,11 +3,11 @@ import { resolve, relative, join, dirname, sep } from 'node:path'
 import { existsSync } from 'node:fs'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
-import { ArixError } from '@arix/core'
-import type { Tool, ToolResult } from '@arix/core'
+import { ArixError } from '@arix-code/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 const execFileAsync = promisify(execFile)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 import ignoreLib from 'ignore'
 const ignore = ignoreLib as unknown as (opts?: unknown) => { ignores(p: string): boolean; add(content: string): void }
 

@@ -1,6 +1,6 @@
 {
-  "name": "@arix/cli",
-  "version": "0.2.1",
+  "name": "@arix-code/cli",
+  "version": "0.2.2",
   "description": "Arix CLI",
   "type": "module",
   "bin": {
@@ -22,13 +22,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@arix/core": "workspace:*",
-    "@arix/dashboard": "workspace:*",
-    "@arix/providers": "workspace:*",
-    "@arix/tools": "workspace:*",
-    "@arix/server": "workspace:*",
-    "@arix/tui": "workspace:*",
-    "@arix/wiki": "workspace:*",
+    "@arix-code/core": "workspace:*",
+    "@arix-code/dashboard": "workspace:*",
+    "@arix-code/providers": "workspace:*",
+    "@arix-code/tools": "workspace:*",
+    "@arix-code/server": "workspace:*",
+    "@arix-code/tui": "workspace:*",
+    "@arix-code/wiki": "workspace:*",
     "commander": "^12.0.0",
     "ink": "^5.0.0",
     "open": "^10.1.0",

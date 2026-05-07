@@ -4,7 +4,7 @@ import { resolve } from 'path'
 export default defineConfig({
   resolve: {
     alias: {
-      '@arix/core': resolve(__dirname, '../core/src/index.ts'),
+      '@arix-code/core': resolve(__dirname, '../core/src/index.ts'),
     },
   },
   test: {

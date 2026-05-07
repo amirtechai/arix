@@ -9,8 +9,8 @@
  * Supports Claude models via Bedrock's converse-stream API.
  */
 import { createHmac, createHash } from 'node:crypto'
-import { BaseProvider, ArixError } from '@arix/core'
-import type { ModelInfo, ChatRequest, StreamChunk, Message, ContentBlock } from '@arix/core'
+import { BaseProvider, ArixError } from '@arix-code/core'
+import type { ModelInfo, ChatRequest, StreamChunk, Message, ContentBlock } from '@arix-code/core'
 
 const BEDROCK_MODELS: ModelInfo[] = [
   { id: 'anthropic.claude-3-5-sonnet-20241022-v2:0', name: 'Claude Sonnet 3.5 (Bedrock)', contextLength: 200_000, supportsTools: true, supportsVision: true },

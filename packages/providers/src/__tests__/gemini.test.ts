@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { GeminiProvider } from '../gemini/index.js'
-import type { ChatRequest } from '@arix/core'
+import type { ChatRequest } from '@arix-code/core'
 
 function makeStreamResult(parts: Array<{ text?: string; functionCall?: { name: string; args: Record<string, unknown> } }>) {
   const chunks = parts.map((p) => ({

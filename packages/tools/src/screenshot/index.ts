@@ -11,7 +11,7 @@
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { existsSync } from 'node:fs'
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 import { runCommand } from '../shell/exec.js'
 
 export class ScreenshotTool implements Tool {

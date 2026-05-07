@@ -3,7 +3,6 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { ReadFileTool, WriteFileTool, ListDirectoryTool, GrepTool, GlobTool, EditFileTool } from '../fs/index.js'
-import { ArixError } from '@arix/core'
 
 let tmpDir: string
 

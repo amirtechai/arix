@@ -1,6 +1,6 @@
-import { BaseProvider, ArixError } from '@arix/core'
-import type { ContentBlock, ModelInfo, ChatRequest, Message, StreamChunk } from '@arix/core'
-import type { TextBlock, ToolUseBlock, ToolResultBlock } from '@arix/core'
+import { BaseProvider, ArixError } from '@arix-code/core'
+import type { ContentBlock, ModelInfo, ChatRequest, Message, StreamChunk } from '@arix-code/core'
+import type { TextBlock, ToolUseBlock, ToolResultBlock } from '@arix-code/core'
 import type { OpenRouterChatRequest, OpenRouterMessage, OpenRouterModelInfo } from './types.js'
 import { parseSSEStream } from './stream.js'
 

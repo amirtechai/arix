@@ -3,9 +3,9 @@ import { Router as createRouter } from 'express'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { homedir } from 'node:os'
-import { SessionManager, ConfigManager } from '@arix/core'
-import type { Message } from '@arix/core'
-import { ProviderFactory } from '@arix/providers'
+import { SessionManager, ConfigManager } from '@arix-code/core'
+import type { Message } from '@arix-code/core'
+import { ProviderFactory } from '@arix-code/providers'
 
 const CONFIG_DIR = join(homedir(), '.arix')
 

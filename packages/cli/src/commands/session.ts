@@ -1,7 +1,7 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { SessionManager } from '@arix/core'
+import { SessionManager } from '@arix-code/core'
 
 export function registerSession(program: Command): void {
   const sessionCmd = program

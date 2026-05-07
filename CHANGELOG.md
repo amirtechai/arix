@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-#### Core (`@arix/core`)
+#### Core (`@arix-code/core`)
 - AgentLoop, ContextManager, ModelRouter, ProviderRegistry with lazy loading
 - LogManager with ANSI colors, sensitive-field scrubbing, log rotation
 - Global error handlers (uncaughtException, unhandledRejection)
@@ -20,20 +20,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SessionManager for persisting and querying conversation history
 - CostTracker writing to `~/.arix/costs.json`
 
-#### Providers (`@arix/providers`)
+#### Providers (`@arix-code/providers`)
 - Anthropic, OpenAI, OpenRouter adapters
 - Ollama adapter with configurable base URL
 - Gemini native adapter
 - Azure OpenAI, AWS Bedrock, and Google Vertex AI adapters
 - FallbackProvider for automatic provider chaining on error
 
-#### Tools (`@arix/tools`)
+#### Tools (`@arix-code/tools`)
 - ReadFileTool, WriteFileTool, EditFileTool, GrepTool, GlobTool, ListDirectoryTool, ShellTool
 - Git tools: status, diff, commit, branch
 - WebSearchTool and WebFetchTool
 - MonitorTool for streaming process output
 
-#### CLI (`@arix/cli`)
+#### CLI (`@arix-code/cli`)
 - Commander.js entry point with `--debug` flag and shell completions (bash/zsh/fish)
 - `arix chat` — interactive session with streaming output
 - `arix fix` — autonomous bug-fix loop
@@ -50,24 +50,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `arix wiki` — knowledge base query and indexing
 - Smart profile auto-recommendation at startup
 
-#### TUI (`@arix/tui`)
+#### TUI (`@arix-code/tui`)
 - Ink-based terminal UI — DiffViewer, FileExplorer, SessionPicker, CommandPalette, SplitPane
 
-#### Dashboard (`@arix/dashboard`)
+#### Dashboard (`@arix-code/dashboard`)
 - Local web dashboard on `localhost:3000`
 - Session browser with full message history and markdown export
 - Cost ledger with daily and per-model breakdown charts
 - Stats overview (sessions, messages, tokens, providers)
 - Project memory viewer with inline edit and delete
 
-#### Server (`@arix/server`)
+#### Server (`@arix-code/server`)
 - Headless gRPC server (`@grpc/grpc-js`) with ChatService and SessionService
 - Proto-defined API at `packages/server/proto/arix.proto`
 
-#### Wiki (`@arix/wiki`)
+#### Wiki (`@arix-code/wiki`)
 - Markdown knowledge base with full-text search and session indexing
 
-#### VS Code Extension (`@arix/vscode-ext`)
+#### VS Code Extension (`@arix-code/vscode-ext`)
 - Sidebar panel for chat, file attachment, and session history
 
 ### Quality

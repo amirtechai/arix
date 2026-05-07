@@ -1,6 +1,6 @@
 {
-  "name": "@arix/dashboard",
-  "version": "0.2.1",
+  "name": "@arix-code/dashboard",
+  "version": "0.2.2",
   "type": "module",
   "exports": {
     ".": "./dist/index.js"
@@ -18,8 +18,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@arix/core": "workspace:*",
-    "@arix/providers": "workspace:*",
+    "@arix-code/core": "workspace:*",
+    "@arix-code/providers": "workspace:*",
     "cors": "^2.8.5",
     "express": "^4.18.2"
   },

@@ -10,7 +10,7 @@
  */
 
 import type { Command } from 'commander'
-import { ModelCatalogue as ModelRegistry, type TaskTier } from "@arix/core"
+import { ModelCatalogue as ModelRegistry, type TaskTier } from "@arix-code/core"
 
 const TIER_EMOJI: Record<TaskTier, string> = { simple: '⚡', medium: '🔧', complex: '🧠' }
 

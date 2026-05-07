@@ -1,7 +1,7 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { ConfigManager } from '@arix/core'
+import { ConfigManager } from '@arix-code/core'
 
 type Goal = 'coding' | 'speed' | 'cost' | 'local' | 'reasoning'
 

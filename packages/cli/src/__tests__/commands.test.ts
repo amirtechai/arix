@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { Command } from 'commander'
 import { registerConfig } from '../commands/config.js'
 import { registerSession } from '../commands/session.js'

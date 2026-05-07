@@ -1,5 +1,5 @@
-import { BaseProvider, ArixError } from '@arix/core'
-import type { ModelInfo, ChatRequest, StreamChunk } from '@arix/core'
+import { BaseProvider, ArixError } from '@arix-code/core'
+import type { ModelInfo, ChatRequest, StreamChunk } from '@arix-code/core'
 import { OpenAIProvider } from '../openai/index.js'
 
 // NVIDIA NIM catalogue — fast inference, OpenAI-compatible endpoint

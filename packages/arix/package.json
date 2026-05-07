@@ -1,6 +1,6 @@
 {
   "name": "arix",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Arix — the world's best AI coding CLI. Provider-agnostic: Claude, GPT-4, Gemini, Llama, and more.",
   "keywords": [
     "ai",
@@ -24,10 +24,10 @@
     "arix": "./bin/arix.js"
   },
   "scripts": {
-    "build": "node -e \"require('fs').mkdirSync('bin', {recursive:true}); require('fs').writeFileSync('bin/arix.js', '#!/usr/bin/env node\\nimport \\\"@arix/cli\\\";\\n'); require('fs').chmodSync('bin/arix.js', 0o755);\""
+    "build": "node -e \"require('fs').mkdirSync('bin', {recursive:true}); require('fs').writeFileSync('bin/arix.js', '#!/usr/bin/env node\\nimport \\\"@arix-code/cli\\\";\\n'); require('fs').chmodSync('bin/arix.js', 0o755);\""
   },
   "dependencies": {
-    "@arix/cli": "workspace:*"
+    "@arix-code/cli": "workspace:*"
   },
   "engines": {
     "node": ">=18.0.0"

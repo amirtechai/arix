@@ -1,4 +1,4 @@
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 import { runCommand } from '../shell/exec.js'
 
 interface ClipboardCmd { read: { cmd: string; args: string[] }; write: { cmd: string; args: string[] } }

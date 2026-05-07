@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { McpToolAdapter } from '../mcp/tool-adapter.js'
 import type { McpClient } from '../mcp/client.js'
 import type { McpTool } from '../mcp/types.js'

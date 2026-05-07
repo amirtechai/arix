@@ -11,8 +11,8 @@ export function registerTui(program: Command): void {
       // Dynamic import keeps TUI deps out of the baseline CLI startup
       const { render } = await import('ink')
       const React = await import('react')
-      const { App } = await import('@arix/tui')
-      const { Launcher } = await import('@arix/tui')
+      const { App } = await import('@arix-code/tui')
+      const { Launcher } = await import('@arix-code/tui')
 
       const cwd = process.cwd()
       const skillName = opts['skill'] as string | undefined

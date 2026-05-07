@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import type { AgentEvent, ToolConfirmationRequest } from '@arix/core'
+import type { AgentEvent, ToolConfirmationRequest } from '@arix-code/core'
 import type { ChatMessage } from '../types.js'
 
 /**

@@ -3,10 +3,10 @@
  * Exercises: config loading, tool registration, skill resolution, agent loop.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mkdtemp, rm, writeFile, mkdir } from 'node:fs/promises'
+import { mkdtemp, rm } from "node:fs/promises"
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { AgentLoop, ConfigManager, SessionManager, SkillManager } from '@arix/core'
+import { AgentLoop, ConfigManager, SessionManager, SkillManager } from '@arix-code/core'
 
 // Minimal mock provider
 function makeMockProvider() {

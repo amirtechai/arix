@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import React from 'react'
 import { render } from 'ink-testing-library'
 import { SessionPickerContent } from '../components/SessionPicker.js'
-import type { SessionSummary } from '@arix/core'
+import type { SessionSummary } from '@arix-code/core'
 
 const sessions: SessionSummary[] = [
   {

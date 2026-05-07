@@ -4,7 +4,7 @@
  */
 
 import { readFile } from 'node:fs/promises'
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 interface Pattern {
   id: string

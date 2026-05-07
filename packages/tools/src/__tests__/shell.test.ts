@@ -1,7 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { ShellExecTool } from '../shell/index.js'
-import { ArixError } from '@arix/core'
-import { tmpdir } from 'node:os'
 
 const cwd = process.cwd()
 

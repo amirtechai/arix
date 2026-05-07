@@ -1,5 +1,5 @@
 import type { Command } from 'commander'
-import { WorkspaceManager } from '@arix/core'
+import { WorkspaceManager } from '@arix-code/core'
 
 export function registerWorkspace(program: Command): void {
   const ws = program

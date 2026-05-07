@@ -5,8 +5,8 @@ import {
   type Part,
   type FunctionDeclaration,
 } from '@google/generative-ai'
-import { BaseProvider, ArixError } from '@arix/core'
-import type { ContentBlock, ModelInfo, ChatRequest, StreamChunk, Message, TextBlock, ToolUseBlock, ToolResultBlock } from '@arix/core'
+import { BaseProvider, ArixError } from '@arix-code/core'
+import type { ContentBlock, ModelInfo, ChatRequest, StreamChunk, Message, TextBlock, ToolUseBlock, ToolResultBlock } from '@arix-code/core'
 
 const MODELS: ModelInfo[] = [
   { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', contextLength: 1_000_000, supportsTools: true, supportsVision: true },

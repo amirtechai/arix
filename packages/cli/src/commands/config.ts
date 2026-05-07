@@ -1,7 +1,7 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { ConfigManager, type ArixConfig } from '@arix/core'
+import { ConfigManager, type ArixConfig } from '@arix-code/core'
 
 const TASK_TYPES = ['coding', 'planning', 'review', 'simple'] as const
 

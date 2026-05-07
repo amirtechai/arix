@@ -1,4 +1,4 @@
-import type { StreamChunk } from '@arix/core'
+import type { StreamChunk } from '@arix-code/core'
 
 // Minimal Anthropic stream event shapes we care about
 interface TextDeltaEvent {

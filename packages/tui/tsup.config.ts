@@ -7,7 +7,7 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   target: 'node18',
-  external: ['react', 'ink', 'ink-text-input', '@arix/core'],
+  external: ['react', 'ink', 'ink-text-input', '@arix-code/core'],
   esbuildOptions(options) {
     options.jsx = 'automatic'
   },

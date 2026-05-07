@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Box, Text, useInput } from 'ink'
-import type { SessionSummary } from '@arix/core'
+import type { SessionSummary } from '@arix-code/core'
 
 interface SessionPickerProps {
   sessions: SessionSummary[]

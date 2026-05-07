@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { AgentLoop } from '../agent/index.js'
-import type { AgentLoopOptions, AgentEvent } from '../agent/index.js'
+import type { AgentEvent } from '../agent/index.js'
 
 // ── TeamMemory ────────────────────────────────────────────────────────────────
 

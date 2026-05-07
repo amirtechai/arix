@@ -17,7 +17,7 @@ let _DatabaseSync: (new (path: string) => NodeSqliteDatabase) | null = null
 function getDatabaseSync(): new (path: string) => NodeSqliteDatabase {
   if (_DatabaseSync) return _DatabaseSync
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+     
     const mod = _require('node:sqlite') as {
       DatabaseSync: new (path: string) => NodeSqliteDatabase
     }

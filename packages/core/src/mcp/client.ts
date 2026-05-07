@@ -7,7 +7,6 @@ import type {
   McpCallToolResult,
   McpInitializeResult,
   McpInitializeParams,
-  MCP_PROTOCOL_VERSION,
 } from './types.js'
 import { MCP_PROTOCOL_VERSION as PROTOCOL_VER } from './types.js'
 

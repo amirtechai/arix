@@ -2,8 +2,8 @@ import type { Command } from 'commander'
 import { createInterface } from 'node:readline'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { ConfigManager } from '@arix/core'
-import { ProviderFactory } from '@arix/providers'
+import { ConfigManager } from '@arix-code/core'
+import { ProviderFactory } from '@arix-code/providers'
 import { printBanner } from '../banner.js'
 
 const SUPPORTED_PROVIDERS = ['anthropic', 'openai', 'openrouter', 'ollama', 'gemini'] as const
@@ -63,7 +63,7 @@ export function registerProvider(program: Command): void {
         return
       }
 
-      const cfg = PROVIDER_CONFIG[providerName as ProviderName]
+      const _cfg = PROVIDER_CONFIG[providerName as ProviderName]
       const configDir = join(homedir(), '.arix')
       const configMgr = new ConfigManager(configDir)
 

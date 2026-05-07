@@ -1,7 +1,7 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { SpecManager } from '@arix/core'
+import { SpecManager } from '@arix-code/core'
 
 const stateDir = join(homedir(), '.arix', 'specs')
 

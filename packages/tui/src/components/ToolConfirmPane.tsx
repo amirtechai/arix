@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Text, useInput } from 'ink'
-import type { ToolConfirmationRequest } from '@arix/core'
+import type { ToolConfirmationRequest } from '@arix-code/core'
 
 interface ToolConfirmPaneProps {
   request: ToolConfirmationRequest

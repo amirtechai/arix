@@ -3,7 +3,7 @@ import { ParallelAgentPool, mergeResults } from '../parallel/index.js'
 import type { WorkerTask, WorkerResult } from '../parallel/index.js'
 
 function makePool(concurrency: number) {
-  const loopFactory = (sp?: string) => ({
+  const loopFactory = (_sp?: string) => ({
     async *run(prompt: string) {
       yield { type: 'text' as const, chunk: `result:${prompt}` }
       yield { type: 'done' as const }

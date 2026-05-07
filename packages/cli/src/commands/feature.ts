@@ -1,7 +1,7 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { FeatureFlagManager } from '@arix/core'
+import { FeatureFlagManager } from '@arix-code/core'
 
 function makeManager(): FeatureFlagManager {
   return new FeatureFlagManager(join(homedir(), '.arix', 'feature-flags.json'))

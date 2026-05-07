@@ -12,7 +12,7 @@
 
 import type { Command } from 'commander'
 import { mkdir } from 'node:fs/promises'
-import { join, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import { createInterface } from 'node:readline'
 import { bootstrap } from '../bootstrap.js'
 
@@ -190,14 +190,14 @@ export function registerBuild(program: Command): void {
 
       let filesWritten = 0
       let currentFile = ''
-      let outputBuffer = ''
+      let _outputBuffer = ''
 
       process.stdout.write(`${c.bold}Building...${c.reset}\n\n`)
 
       for await (const event of loop.run(prompt)) {
         switch (event.type) {
           case 'text':
-            outputBuffer += event.chunk
+            _outputBuffer += event.chunk
             if (opts.dryRun) {
               // Stream dry-run plan directly
               process.stdout.write(event.chunk)

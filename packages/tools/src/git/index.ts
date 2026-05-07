@@ -1,6 +1,5 @@
 import { simpleGit } from 'simple-git'
-import type { SimpleGit } from 'simple-git'
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 export class GitStatusTool implements Tool {
   readonly name = 'git_status'

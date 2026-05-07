@@ -20,8 +20,8 @@
 ├── CHAT.md                                           ← bu dosya
 ├── todo.md                                           ← tüm geliştirme promptları (25 prompt)
 ├── packages/
-│   ├── core/                                         ← @arix/core (DONE)
-│   └── providers/                                    ← @arix/providers (DONE)
+│   ├── core/                                         ← @arix-code/core (DONE)
+│   └── providers/                                    ← @arix-code/providers (DONE)
 └── docs/superpowers/
     ├── specs/2026-04-13-arix-design.md            ← onaylı sistem tasarımı
     └── plans/2026-04-13-arix-phase1-foundation.md ← Phase 1 planı (tamamlandı)
@@ -37,13 +37,13 @@
 
 ### Phase 1 Tamamlanan Tasks
 1. ✓ Monorepo scaffold (pnpm, tsconfig strict, eslint, prettier)
-2. ✓ @arix/core package setup
+2. ✓ @arix-code/core package setup
 3. ✓ Shared types + ArixError (TDD)
 4. ✓ Provider interface + BaseProvider (retry, normalizeMessages)
 5. ✓ ProviderRegistry
 6. ✓ ModelRegistry (role → model ID, parseModelId)
 7. ✓ ModelRouter (fallback chain, cost-aware routing)
-8. ✓ @arix/providers package setup
+8. ✓ @arix-code/providers package setup
 9. ✓ OpenRouterProvider + SSE stream parser
 10. ✓ AnthropicProvider + event mapper
 11. ✓ OpenAIProvider
@@ -57,7 +57,7 @@
 - P2-01: Tool executor (Read, Write, Edit, Glob, Grep, Bash)
 - P2-02: Path sandbox + permission system
 - P2-03: Shell command blocklist
-- P2-04: @arix/cli package + argument parser
+- P2-04: @arix-code/cli package + argument parser
 - P2-05: Config system (~/.arix/config.json)
 - P2-06: Session storage (JSON, resume by UUID)
 - P2-07: Agent loop (streaming, tool execution)
@@ -70,16 +70,16 @@
 - Provider sistemi önce, CLI sonra, TUI en son
 - ~/.arix/ — tamamen bağımsız config dizini
 - Skill format: Claude Code .md formatıyla uyumlu (manuel kopyalama)
-- Package names: @arix/core, @arix/providers, @arix/tools, @arix/cli, @arix/tui
+- Package names: @arix-code/core, @arix-code/providers, @arix-code/tools, @arix-code/cli, @arix-code/tui
 - Build: tsup | Test: vitest | Lint: @typescript-eslint
-- vitest.config.ts'de `@arix/core` alias → source (dist build gerekmez test için)
+- vitest.config.ts'de `@arix-code/core` alias → source (dist build gerekmez test için)
 
 ## Devam Talimatı
 
 Yeni session'da:
 1. Bu CHAT.md'yi oku
 2. todo.md'deki P2 promptlarına bak
-3. @arix/tools + @arix/cli paketlerini oluştur
+3. @arix-code/tools + @arix-code/cli paketlerini oluştur
 4. Tool executor'ı TDD ile yaz (sandboxed paths, blocklist)
 5. CLI arg parser + config system
 6. Agent loop (streaming + tool execution)

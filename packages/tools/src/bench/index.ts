@@ -3,7 +3,7 @@
  * pure-JS sampling loop (less accurate, no warm-up control).
  */
 
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 import { runCommand, truncate } from '../shell/exec.js'
 
 export class BenchRunnerTool implements Tool {

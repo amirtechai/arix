@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { AnthropicStreamMapper } from '../anthropic/mapper.js'
-import type { StreamChunk } from '@arix/core'
+import type { StreamChunk } from '@arix-code/core'
 
 describe('AnthropicStreamMapper', () => {
   it('maps text_delta to StreamChunk with text', () => {

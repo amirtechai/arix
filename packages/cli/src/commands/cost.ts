@@ -11,7 +11,7 @@
  */
 
 import type { Command } from 'commander'
-import { CostTracker, ModelCatalogue, bySkill, regression, tokenPreflight } from '@arix/core'
+import { CostTracker, ModelCatalogue, bySkill, regression, tokenPreflight } from '@arix-code/core'
 
 export function registerCost(program: Command): void {
   const cmd = program

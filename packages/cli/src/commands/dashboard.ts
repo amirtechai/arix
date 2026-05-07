@@ -16,7 +16,7 @@ export function registerDashboard(program: Command): void {
 
       try {
         // Dynamic import to avoid heavy startup deps
-        const { startDashboard } = await import('@arix/dashboard')
+        const { startDashboard } = await import('@arix-code/dashboard')
         const server = await startDashboard({ port, storageDir })
 
         console.log(`Dashboard running at ${server.url}`)

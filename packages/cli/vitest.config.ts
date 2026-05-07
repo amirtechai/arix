@@ -4,9 +4,9 @@ import { resolve } from 'path'
 export default defineConfig({
   resolve: {
     alias: {
-      '@arix/core': resolve(__dirname, '../core/src/index.ts'),
-      '@arix/providers': resolve(__dirname, '../providers/src/index.ts'),
-      '@arix/tools': resolve(__dirname, '../tools/src/index.ts'),
+      '@arix-code/core': resolve(__dirname, '../core/src/index.ts'),
+      '@arix-code/providers': resolve(__dirname, '../providers/src/index.ts'),
+      '@arix-code/tools': resolve(__dirname, '../tools/src/index.ts'),
     },
   },
   test: {

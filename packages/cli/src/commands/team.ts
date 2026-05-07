@@ -11,11 +11,11 @@
 
 import type { Command } from 'commander'
 import { bootstrap } from '../bootstrap.js'
-import { AgentLoop, CoordinatorAgent, TeamMemory, ModelCatalogue } from '@arix/core'
-import type { AgentEvent, TaskType } from '@arix/core'
+import { AgentLoop, CoordinatorAgent, TeamMemory, ModelCatalogue } from '@arix-code/core'
+import type { AgentEvent, TaskType } from '@arix-code/core'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { ProviderFactory } from '@arix/providers'
+import { ProviderFactory } from '@arix-code/providers'
 
 // ── ANSI ─────────────────────────────────────────────────────────────────────
 

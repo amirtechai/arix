@@ -6,5 +6,5 @@ export default defineConfig({
   dts: false,
   clean: true,
   sourcemap: true,
-  external: ['@arix/core', 'better-sqlite3'],
+  external: ['@arix-code/core', 'better-sqlite3'],
 })

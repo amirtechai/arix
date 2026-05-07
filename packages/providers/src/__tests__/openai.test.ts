@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { OpenAIProvider } from '../openai/index.js'
-import { ArixError } from '@arix/core'
+import { ArixError } from '@arix-code/core'
 
 describe('OpenAIProvider', () => {
   it('throws AUTH_ERROR when no API key provided', () => {

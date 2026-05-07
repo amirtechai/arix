@@ -1,6 +1,6 @@
 {
-  "name": "@arix/wiki",
-  "version": "0.2.1",
+  "name": "@arix-code/wiki",
+  "version": "0.2.2",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

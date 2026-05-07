@@ -1,4 +1,4 @@
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 // ── HTML helpers ──────────────────────────────────────────────────────────────
 
@@ -31,8 +31,8 @@ function parseDDGResults(html: string, maxResults: number): SearchResult[] {
   const results: SearchResult[] = []
 
   // Each result block: <div class="result results_links..."> ... <a class="result__a" href="...">title</a> ... <a class="result__snippet">snippet</a>
-  const blockRe = /<div[^>]+class="[^"]*result[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/gi
-  let blockMatch: RegExpExecArray | null
+  const _blockRe = /<div[^>]+class="[^"]*result[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/gi
+  let _blockMatch: RegExpExecArray | null
 
   // Simpler: extract all result__a links + result__snippet in order
   const linkRe = /<a[^>]+class="[^"]*result__a[^"]*"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi

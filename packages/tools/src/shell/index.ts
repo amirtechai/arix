@@ -1,8 +1,8 @@
 import { spawn } from 'node:child_process'
 import { resolve, sep } from 'node:path'
 import { parse as parseShell } from 'shell-quote'
-import { ArixError } from '@arix/core'
-import type { Tool, ToolResult } from '@arix/core'
+import { ArixError } from '@arix-code/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 const MAX_OUTPUT_BYTES = 50 * 1024 // 50KB
 const DEFAULT_TIMEOUT = 30_000

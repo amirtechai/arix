@@ -8,8 +8,8 @@
  *   AZURE_OPENAI_API_VERSION (default: 2024-08-01-preview)
  */
 import OpenAI from 'openai'
-import { BaseProvider, ArixError } from '@arix/core'
-import type { ContentBlock, ModelInfo, ChatRequest, Message, StreamChunk } from '@arix/core'
+import { BaseProvider, ArixError } from '@arix-code/core'
+import type { ContentBlock, ModelInfo, ChatRequest, Message, StreamChunk } from '@arix-code/core'
 
 export class AzureOpenAIProvider extends BaseProvider {
   readonly id = 'azure'

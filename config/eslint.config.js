@@ -8,9 +8,19 @@ export default [
     plugins: { '@typescript-eslint': tseslint },
     rules: {
       ...tseslint.configs.recommended.rules,
-      '@typescript-eslint/no-explicit-any': 'error',
+      // any is a warning, not an error: legitimate uses exist for lazy peer
+      // imports and JSON-shaped tool inputs. Tighten case-by-case as types
+      // get added.
+      '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+      // Unused vars prefixed with _ are intentional placeholders.
+      '@typescript-eslint/no-unused-vars': ['error', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      }],
+      '@typescript-eslint/no-require-imports': 'warn',
+      '@typescript-eslint/no-this-alias': 'warn',
     }
   }
 ]

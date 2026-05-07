@@ -1,4 +1,4 @@
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 import { runCommand, truncate } from '../shell/exec.js'
 
 /**

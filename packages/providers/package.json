@@ -1,6 +1,6 @@
 {
-  "name": "@arix/providers",
-  "version": "0.2.1",
+  "name": "@arix-code/providers",
+  "version": "0.2.2",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -19,7 +19,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@google/generative-ai": "^0.24.1",
-    "@arix/core": "workspace:*",
+    "@arix-code/core": "workspace:*",
     "openai": "^4.70.0"
   },
   "devDependencies": {

@@ -21,8 +21,8 @@ import { readFile } from 'node:fs/promises'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { bootstrap } from '../bootstrap.js'
-import { ParallelAgentPool, mergeResults } from '@arix/core'
-import type { AgentEvent } from '@arix/core'
+import { ParallelAgentPool, mergeResults } from '@arix-code/core'
+import type { AgentEvent } from '@arix-code/core'
 
 const exec = promisify(execFile)
 

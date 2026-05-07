@@ -11,8 +11,8 @@
  * On rate limit (429) or auth error, automatically falls back to the next provider.
  */
 
-import type { ChatRequest, ModelInfo, StreamChunk } from '@arix/core'
-import { BaseProvider } from '@arix/core'
+import type { ChatRequest, ModelInfo, StreamChunk } from '@arix-code/core'
+import { BaseProvider } from '@arix-code/core'
 
 export class FallbackProvider extends BaseProvider {
   readonly id = 'fallback'

@@ -10,9 +10,8 @@ import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { bootstrap } from '../bootstrap.js'
-import { ConfigManager, ModelCatalogue, AgentLoop } from '@arix/core'
-import { ProviderFactory } from '@arix/providers'
-import type { AgentEvent } from '@arix/core'
+import { ConfigManager, ModelCatalogue, AgentLoop } from '@arix-code/core'
+import { ProviderFactory } from '@arix-code/providers'
 
 const isTTY = process.stdout.isTTY
 

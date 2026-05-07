@@ -153,5 +153,5 @@ class LogManager {
   }
 }
 
-// Singleton — import { logger } from '@arix/core'
+// Singleton — import { logger } from '@arix-code/core'
 export const logger = new LogManager()

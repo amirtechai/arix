@@ -1,5 +1,5 @@
 import { simpleGit } from 'simple-git'
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 export class GitBlameTool implements Tool {
   readonly name = 'git_blame'

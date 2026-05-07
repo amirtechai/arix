@@ -1,5 +1,5 @@
-import { ArixError } from '@arix/core'
-import type { StreamChunk, TokenUsage } from '@arix/core'
+import { ArixError } from '@arix-code/core'
+import type { StreamChunk, TokenUsage } from '@arix-code/core'
 import type { OpenRouterChunk } from './types.js'
 
 export async function* parseSSEStream(

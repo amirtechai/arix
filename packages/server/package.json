@@ -1,6 +1,6 @@
 {
-  "name": "@arix/server",
-  "version": "0.2.1",
+  "name": "@arix-code/server",
+  "version": "0.2.2",
   "description": "Arix gRPC server",
   "type": "module",
   "main": "./dist/index.js",
@@ -19,9 +19,9 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.11.0",
     "@grpc/proto-loader": "^0.7.0",
-    "@arix/core": "workspace:*",
-    "@arix/providers": "workspace:*",
-    "@arix/tools": "workspace:*"
+    "@arix-code/core": "workspace:*",
+    "@arix-code/providers": "workspace:*",
+    "@arix-code/tools": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

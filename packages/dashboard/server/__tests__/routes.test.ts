@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import express from 'express'
 import request from 'supertest'
 import { createApiRouter } from '../routes.js'
-import type { SessionSummary, Session } from '@arix/core'
+import type { SessionSummary, Session } from '@arix-code/core'
 
 // Minimal mock matching SessionManager interface
 function makeSessionManager(overrides?: Partial<{
@@ -12,7 +12,7 @@ function makeSessionManager(overrides?: Partial<{
   return {
     list: overrides?.list ?? (() => Promise.resolve([])),
     load: overrides?.load ?? ((_id: string) => Promise.resolve(null)),
-  } as unknown as import('@arix/core').SessionManager
+  } as unknown as import('@arix-code/core').SessionManager
 }
 
 function makeApp(sm: ReturnType<typeof makeSessionManager>) {

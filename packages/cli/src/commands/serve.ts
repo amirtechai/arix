@@ -32,7 +32,7 @@ export function registerServe(program: Command): void {
           const storageDir = join(homedir(), '.arix', 'sessions')
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore — workspace package types resolved after build
-          const { startDashboard } = await import('@arix/dashboard')
+          const { startDashboard } = await import('@arix-code/dashboard')
           const server = await startDashboard({ port, storageDir })
           stopDashboard = server.close
           console.log(`Dashboard running at ${server.url}`)
@@ -53,7 +53,7 @@ export function registerServe(program: Command): void {
         try {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore — workspace package types resolved after build
-          const { startServer } = await import('@arix/server')
+          const { startServer } = await import('@arix-code/server')
           const boundPort = await startServer(grpcPort)
           console.log(`gRPC server running on port ${boundPort}`)
         } catch (err: unknown) {

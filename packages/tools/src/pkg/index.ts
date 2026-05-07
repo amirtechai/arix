@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 import { runCommand, truncate } from '../shell/exec.js'
 
 type Pm = 'npm' | 'pnpm' | 'yarn' | 'pip' | 'uv' | 'cargo' | 'go'

@@ -9,7 +9,7 @@ import type { PaletteCommand } from './CommandPalette.js'
 import { SplitPane } from './SplitPane.js'
 import { FileExplorer } from './FileExplorer.js'
 import { useStream } from '../hooks/useStream.js'
-import type { AgentLoop, Session, SessionManager } from '@arix/core'
+import type { AgentLoop, Session, SessionManager } from '@arix-code/core'
 import type { ChatMessage } from '../types.js'
 
 export interface AppProps {

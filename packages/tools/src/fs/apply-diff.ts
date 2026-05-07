@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { resolve, sep } from 'node:path'
-import { ArixError } from '@arix/core'
-import type { Tool, ToolResult } from '@arix/core'
+import { ArixError } from '@arix-code/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 const SEARCH_RE  = /^<{5,}\s*SEARCH\s*$/
 const DIVIDER_RE = /^={5,}\s*$/

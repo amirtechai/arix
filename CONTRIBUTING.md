@@ -50,8 +50,8 @@ packages/
 4. Add tests in `packages/providers/src/__tests__/<name>.test.ts`
 
 ```typescript
-import { BaseProvider } from '@arix/core'
-import type { ChatRequest, StreamChunk, ModelInfo } from '@arix/core'
+import { BaseProvider } from '@arix-code/core'
+import type { ChatRequest, StreamChunk, ModelInfo } from '@arix-code/core'
 
 export class MyProvider extends BaseProvider {
   readonly id = 'myprovider'
@@ -71,12 +71,12 @@ export class MyProvider extends BaseProvider {
 ## Adding a Tool
 
 1. Create or extend a tool file in `packages/tools/src/`
-2. Implement the `Tool` interface from `@arix/core`
+2. Implement the `Tool` interface from `@arix-code/core`
 3. Export from `packages/tools/src/index.ts`
 4. Add tests
 
 ```typescript
-import type { Tool, ToolResult } from '@arix/core'
+import type { Tool, ToolResult } from '@arix-code/core'
 
 export class MyTool implements Tool {
   readonly name = 'my_tool'

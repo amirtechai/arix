@@ -1,4 +1,4 @@
-import type { Provider } from '@arix/core'
+import type { Provider } from '@arix-code/core'
 import { OpenRouterProvider } from './openrouter/index.js'
 import { AnthropicProvider } from './anthropic/index.js'
 import { OpenAIProvider } from './openai/index.js'

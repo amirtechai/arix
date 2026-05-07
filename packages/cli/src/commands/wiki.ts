@@ -1,6 +1,6 @@
 import type { Command } from 'commander'
-import { WikiIndex } from '@arix/wiki'
-import type { AgentEvent } from '@arix/core'
+import { WikiIndex } from '@arix-code/wiki'
+import type { AgentEvent } from '@arix-code/core'
 import { bootstrap } from '../bootstrap.js'
 import { resolve } from 'node:path'
 

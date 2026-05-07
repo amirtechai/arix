@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import type { AgentEvent, ToolConfirmationRequest } from '@arix/core'
+import type { AgentEvent, ToolConfirmationRequest } from '@arix-code/core'
 import { StreamState } from './StreamState.js'
 import type { ChatMessage } from '../types.js'
 

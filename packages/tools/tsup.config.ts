@@ -6,5 +6,5 @@ export default defineConfig({
   dts: false,
   clean: true,
   sourcemap: true,
-  external: ['@arix/core'],
+  external: ['@arix-code/core'],
 })

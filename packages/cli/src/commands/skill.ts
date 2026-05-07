@@ -1,7 +1,7 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { ConfigManager, MarketplaceClient, SkillManager } from '@arix/core'
+import { ConfigManager, MarketplaceClient, SkillManager } from '@arix-code/core'
 
 async function makeSkillManager(): Promise<SkillManager> {
   const sm = new SkillManager()

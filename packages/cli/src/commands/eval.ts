@@ -1,5 +1,5 @@
 import type { Command } from 'commander'
-import { runSuite, formatReport, skillRegressionSuite } from '@arix/core'
+import { runSuite, formatReport, skillRegressionSuite } from '@arix-code/core'
 import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'

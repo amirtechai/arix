@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
-import { BaseProvider, ArixError } from '@arix/core'
-import type { ContentBlock, ModelInfo, ChatRequest, StreamChunk, Message } from '@arix/core'
+import { BaseProvider, ArixError } from '@arix-code/core'
+import type { ContentBlock, ModelInfo, ChatRequest, StreamChunk, Message } from '@arix-code/core'
 import { AnthropicStreamMapper } from './mapper.js'
 
 function mapAnthropicError(err: unknown): never {

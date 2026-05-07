@@ -6,7 +6,7 @@
 import type { Command } from 'commander'
 import { readFile, writeFile, copyFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { redactSecrets, scanSecrets } from '@arix/tools'
+import { redactSecrets, scanSecrets } from '@arix-code/tools'
 
 export function registerRedact(program: Command): void {
   program

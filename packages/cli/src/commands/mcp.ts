@@ -12,8 +12,8 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { McpRegistry, McpClient, MCP_CATALOG, findMcpEntry, materialiseMcpEntry } from '@arix/core'
-import type { McpServerConfig } from '@arix/core'
+import { McpRegistry, McpClient, MCP_CATALOG, findMcpEntry, materialiseMcpEntry } from '@arix-code/core'
+import type { McpServerConfig } from '@arix-code/core'
 
 const configDir = join(homedir(), '.arix')
 

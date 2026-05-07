@@ -1,5 +1,5 @@
-import { BaseProvider } from '@arix/core'
-import type { ModelInfo, ChatRequest, StreamChunk } from '@arix/core'
+import { BaseProvider } from '@arix-code/core'
+import type { ModelInfo, ChatRequest, StreamChunk } from '@arix-code/core'
 import { parseSSEStream } from '../openrouter/stream.js'
 
 interface OllamaModel {

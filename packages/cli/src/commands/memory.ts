@@ -8,7 +8,7 @@
  */
 
 import type { Command } from 'commander'
-import { ProjectMemory } from '@arix/core'
+import { ProjectMemory } from '@arix-code/core'
 
 export function registerMemory(program: Command): void {
   const cmd = program

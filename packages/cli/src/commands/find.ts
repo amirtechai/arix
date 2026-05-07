@@ -8,7 +8,7 @@
  */
 
 import type { Command } from 'commander'
-import { SemanticSearchTool } from '@arix/tools'
+import { SemanticSearchTool } from '@arix-code/tools'
 
 const isTTY = process.stdout.isTTY
 const c = {

@@ -11,15 +11,14 @@
 
 import type { Command } from 'commander'
 import { createInterface } from 'node:readline'
-import { appendFile, readFile, writeFile } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
+import { appendFile, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { homedir } from 'node:os'
 import { bootstrap } from '../bootstrap.js'
 import { buildFileContext } from '../file-context.js'
 import { classifyTask } from '../task-classifier.js'
-import type { AgentEvent, Session } from '@arix/core'
-import { CostTracker, ProjectMemory, ModelCatalogue } from '@arix/core'
+import type { AgentEvent, Session } from '@arix-code/core'
+import { CostTracker, ProjectMemory, ModelCatalogue } from '@arix-code/core'
 
 const HISTORY_FILE = join(homedir(), '.arix', 'history.txt')
 const MAX_HISTORY = 500
@@ -283,7 +282,7 @@ export function registerChat(program: Command): void {
         ...(message ? { initialPrompt: message } : {}),
         ...(fileCtx?.content ? { extraSystemPrompt: fileCtx.content } : {}),
       })
-      const config = await configManager.load()
+      const _config = await configManager.load()
 
       // --continue: find most recent session
       if (continueLatest && resumeId === undefined && !resumeInteractive) {
@@ -505,7 +504,7 @@ export function registerChat(program: Command): void {
                 break
               }
               case 'memory': {
-                const { ProjectMemory } = await import('@arix/core')
+                const { ProjectMemory } = await import('@arix-code/core')
                 const mem = new ProjectMemory(cwd)
                 await mem.load()
                 if (mem.size === 0) {
@@ -586,7 +585,7 @@ export function registerChat(program: Command): void {
           // Show cost hint after each turn (dim, unobtrusive)
           const costStr = costTracker.format()
           if (costStr) {
-            const spent = costTracker.summary().totalUsd ?? 0
+            const _spent = costTracker.summary().totalUsd ?? 0
             const budgetSuffix = budgetUsd !== undefined
               ? ` ${c.gray}/ $${budgetUsd.toFixed(2)}${c.reset}`
               : ''

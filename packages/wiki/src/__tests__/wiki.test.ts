@@ -11,7 +11,7 @@ let sqliteAvailable = false
 try {
   // Synchronous require so the probe runs deterministically in vitest's
   // ESM-but-with-cjs-interop transform pipeline.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+   
   const { createRequire } = await import('node:module')
   const req = createRequire(import.meta.url)
   req('node:sqlite')

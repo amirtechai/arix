@@ -19,11 +19,11 @@ import type { Command } from 'commander'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { bootstrap } from '../bootstrap.js'
-import type { AgentEvent } from '@arix/core'
+import type { AgentEvent } from '@arix-code/core'
 
 const exec = promisify(execFile)
 
-const PHASES = ['RED', 'GREEN', 'REFACTOR'] as const
+const _PHASES = ['RED', 'GREEN', 'REFACTOR'] as const
 type Phase = typeof PHASES[number]
 
 export function registerTdd(program: Command): void {

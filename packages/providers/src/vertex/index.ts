@@ -8,8 +8,8 @@
  *
  * For production use, integrate with @google-cloud/vertexai SDK for ADC support.
  */
-import { BaseProvider, ArixError } from '@arix/core'
-import type { ModelInfo, ChatRequest, StreamChunk, Message, ContentBlock } from '@arix/core'
+import { BaseProvider, ArixError } from '@arix-code/core'
+import type { ModelInfo, ChatRequest, StreamChunk, Message, ContentBlock } from '@arix-code/core'
 
 const VERTEX_MODELS: ModelInfo[] = [
   { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro (Vertex)', contextLength: 1_000_000, supportsTools: true, supportsVision: true },

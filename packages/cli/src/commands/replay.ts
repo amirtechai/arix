@@ -8,8 +8,8 @@ import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { setTimeout as sleep } from 'node:timers/promises'
-import { SessionManager } from '@arix/core'
-import type { ContentBlock, Message } from '@arix/core'
+import { SessionManager } from '@arix-code/core'
+import type { ContentBlock, Message } from '@arix-code/core'
 
 const sessionDir = join(homedir(), '.arix', 'sessions')
 

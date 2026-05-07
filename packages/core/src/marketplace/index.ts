@@ -1,8 +1,8 @@
-import { createWriteStream } from 'node:fs'
+
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { pipeline } from 'node:stream/promises'
-import { Readable } from 'node:stream'
+
+
 import { ArixError } from '../errors.js'
 
 // ── Registry contract ─────────────────────────────────────────────────────────

@@ -10,7 +10,7 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { readdir, readFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
-import { SpecManager } from '@arix/core'
+import { SpecManager } from '@arix-code/core'
 
 const stateDir = join(homedir(), '.arix', 'specs')
 

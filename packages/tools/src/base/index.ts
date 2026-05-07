@@ -1,6 +1,5 @@
 import EventEmitter from 'node:events'
-import { ArixError } from '@arix/core'
-import type { Tool, ToolCall, ToolResult, ToolDefinition, PermissionMode, ToolConfirmationRequest } from '@arix/core'
+import type { Tool, ToolCall, ToolResult, ToolDefinition, PermissionMode, ToolConfirmationRequest } from '@arix-code/core'
 
 export class ToolRegistry {
   private readonly tools = new Map<string, Tool>()

@@ -8,7 +8,7 @@
  */
 
 import type { Command } from 'commander'
-import { PluginLoader } from '@arix/core'
+import { PluginLoader } from '@arix-code/core'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
