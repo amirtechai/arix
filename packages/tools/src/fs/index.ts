@@ -304,6 +304,11 @@ export class EditFileTool implements Tool {
   }
 }
 
+export { ApplyDiffTool, parseDiffBlocks } from './apply-diff.js'
+export type { DiffBlock } from './apply-diff.js'
+
+import { ApplyDiffTool } from './apply-diff.js'
+
 export function createFsTools(cwd: string, extraPaths: string[] = []): Tool[] {
   const allowedPaths = [cwd, ...extraPaths]
   return [
@@ -313,5 +318,6 @@ export function createFsTools(cwd: string, extraPaths: string[] = []): Tool[] {
     new GrepTool(cwd),
     new GlobTool(cwd),
     new EditFileTool(allowedPaths),
+    new ApplyDiffTool(allowedPaths),
   ]
 }

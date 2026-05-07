@@ -1,9 +1,22 @@
 export { ToolRegistry, ToolExecutor } from './base/index.js'
-export { ReadFileTool, WriteFileTool, ListDirectoryTool, GrepTool, GlobTool, EditFileTool, createFsTools } from './fs/index.js'
+export { ReadFileTool, WriteFileTool, ListDirectoryTool, GrepTool, GlobTool, EditFileTool, ApplyDiffTool, parseDiffBlocks, createFsTools } from './fs/index.js'
+export type { DiffBlock } from './fs/index.js'
 export { ShellExecTool } from './shell/index.js'
+export { runCommand, truncate as truncateOutput } from './shell/exec.js'
+export type { RunResult } from './shell/exec.js'
 export { GitStatusTool, GitDiffTool, GitCommitTool, GitBranchTool, createGitTools } from './git/index.js'
+export {
+  GitBlameTool, GitLogTool, GitRebaseTool, GitCherryPickTool, GitBisectTool,
+  createAdvancedGitTools,
+} from './git/advanced.js'
 export { WebSearchTool, WebFetchTool, createWebTools } from './web/index.js'
 export type { SearchResult } from './web/index.js'
+export { HttpClientTool } from './web/http-client.js'
 export { MonitorTool, ProcessMonitor } from './monitor/index.js'
 export type { MonitorEvents } from './monitor/index.js'
 export { SemanticSearchTool } from './search/index.js'
+export { PackageManagerTool } from './pkg/index.js'
+export { TestRunnerTool } from './test/index.js'
+export { LinterTool } from './lint/index.js'
+export { DockerExecTool } from './docker/index.js'
+export { ClipboardReadTool, ClipboardWriteTool } from './clipboard/index.js'
