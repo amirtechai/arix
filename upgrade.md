@@ -1,185 +1,155 @@
-# Arix — Upgrade Backlog
+# Arix — Upgrade Backlog v2
 
-> Geliştirme yol haritası. Kategori bazlı, her madde için **etki + tahmini effort** (S=<1g, M=1-3g, L=>3g).
-
----
-
-## A. Agent çekirdeği — derinleştir
-
-| #  | Özellik | Etki | Effort |
-|----|---|---|---|
-| A1 | **Plan-Act-Reflect döngüsü** — her turn öncesi 1-shot planning, sonrası 1-shot reflection (self-critique). Hatalı tool call'ları erken yakalar. | Quality+ | M |
-| A2 | **Speculative tool execution** — read-only tool'ları paralel başlat, write tool'larında onay öncesi pre-fetch et. | Latency-30% | M |
-| A3 | **Diff-aware editing** — `apply_diff` tool'u: LLM tüm dosyayı yazmak yerine `<<<<<< SEARCH ... ====== ... >>>>>>> REPLACE` blokları üretir, atomik uygula. Aider tarzı. | Cost-60% | M |
-| A4 | **Compact summarization checkpoints** — sonsuz session: 80%'de compact + structured snapshot, geri yüklemede recall. (var ama yüzeysel — yapılandırılmış memory'e yaz) | UX | M |
-| A5 | **Sub-agent isolation** — coordinator subtask'ları kendi context window'unda çalıştır, kirletmesin. | Quality+ | S |
-| A6 | **Tool result caching** — `read_file`, `git_diff` gibi idempotent çağrıları (cwd+input-hash) cache'le. Aynı turn'de 2. çağrıda anında dön. | Cost-15% | S |
-| A7 | **Repository graph indeksi** — proje açılırken tree-sitter ile sembol/import grafiği çıkar, `find_references` / `find_definition` tool'larını hızlandır. | Quality+ | L |
+> v1'in büyük kısmı tamamlandı (skills, MCP catalog, providers, B-tier tools, K differentiator çekirdeği, observability). Bkz. `upgrade-v1.md`.
+> Bu dosya sıradaki dalgayı planlar. Etki + Effort: S=<1g, M=1-3g, L=>3g.
 
 ---
 
-## B. Yeni tool'lar (yüksek talep, yok)
+## L. Wire-up — yeni modülleri agent loop'a entegre et
+
+Yeni eklenen modüller (cache, undo, encryption, arbitrage, tracer, audit, spec, workspace) çalışıyor ama AgentLoop'a opsiyonel olarak takılı değil. **En yüksek değer/efor oranı burada.**
+
+| #   | İş | Etki | Effort |
+|-----|---|---|---|
+| L1  | `AgentLoop.options.toolCache` — read-only tool'ları otomatik sar | Cost-15% | S |
+| L2  | Write/Edit/ApplyDiff tool'larında otomatik `UndoStack.snapshot()` çağrısı | UX | S |
+| L3  | `ModelRouter`'a `chooseArbitrage` adapter — config'le eşik geçince provider swap | Cost-30% | M |
+| L4  | `AgentLoop.options.planFirst: true` → her turn öncesi `planTurn()` | Quality+ | S |
+| L5  | `AgentLoop.options.reflectAfter: true` → assistant turn sonrası kritik | Quality+ | S |
+| L6  | `Tracer.withSpan` AgentLoop'taki provider call + tool exec sarması | Ops | S |
+| L7  | `AuditLog` her tool call + confirmation kararını otomatik yazsın | Compliance | S |
+| L8  | `SkillManager.loadBundled()` bootstrap'a default olarak | UX | S |
+| L9  | `arix --workspace <name>` flag — WorkspaceManager allowedPaths'e besler | Feature | S |
+| L10 | `arix spec <file> --execute` → SpecManager'dan AgentLoop'a otomatik task pipeline | Feature | M |
+| L11 | `SessionManager`'a opsiyonel encryption (passphrase env'den) | Privacy | M |
+| L12 | `tools/web/web-fetch.ts` SSRF guard'ını `http_client`'taki gibi sıkılaştır | Security | S |
+
+---
+
+## M. Eval & quality assurance
+
+| #   | İş | Detay | Effort |
+|-----|---|---|---|
+| M1  | `arix eval` komutu | SWE-Bench Lite + HumanEval + repo-içi custom eval'ler | L |
+| M2  | Golden trace replay | `tests/golden/*.jsonl` — known-good session deterministik replay | M |
+| M3  | Prompt regression tests | Bundled skill'lerin output snapshot'ları (vitest snapshots) | S |
+| M4  | Tool-call quality metrics | Başarı oranı, ortalama retry, hata tipleri — dashboard'da | M |
+| M5  | Provider conformance suite | Her provider için aynı 20 test, tools/streaming/usage doğrula | S |
+| M6  | Cost benchmark | Aynı 10 prompt, tüm provider'larda — kalite vs maliyet tablosu | M |
+
+---
+
+## N. Eksik native tool'lar (MCP'ye gitmeden)
 
 | #   | Tool | Use case | Effort |
 |-----|---|---|---|
-| B1  | `apply_diff` (search-replace patch) | A3 ile birlikte — token tasarrufu | M |
-| B2  | `db_query` (PostgreSQL/MySQL/SQLite) | Schema introspection, sample query, EXPLAIN | M |
-| B3  | `browser_automation` (Playwright headless) | Form doldur, screenshot, scrape, test | M |
-| B4  | `screenshot` & `image_analyze` | Bug raporlarını görsel okumak | S |
-| B5  | `package_manager` (npm/pnpm/yarn/pip/cargo/go) | Bağımlılık ekle/kaldır/audit | S |
-| B6  | `test_runner` (vitest/jest/pytest/go test) | Selektif test çalıştırma + parse | S |
-| B7  | `linter` (eslint/ruff/clippy/golangci) | Inline fix önerisi | S |
-| B8  | `git_advanced` (rebase, cherry-pick, bisect, blame) | Var olan git tool'unu genişlet | S |
-| B9  | `docker_exec` | Sandbox container'da kod çalıştır | M |
-| B10 | `http_client` (richer than `web_fetch`) | API testi, OAuth, multipart | S |
-| B11 | `clipboard_read` / `clipboard_write` | Kullanıcı snippet'leriyle çalış | S |
-| B12 | `editor_diff_apply` (LSP-aware) | LSP server üstünden semantic edit | L |
+| N1  | `db_query` (pg/mysql2/better-sqlite3) | EXPLAIN, schema, sample query — connection-string env'den | M |
+| N2  | `browser_automation` (Playwright wrapper, native) | Form, click, screenshot, scrape — MCP playwright'a alternatif | M |
+| N3  | `screenshot` + `image_analyze` | Vision-capable provider'lara base64 image | S |
+| N4  | `lsp_diagnostics` | tsserver/gopls/pyright çıktısını parse et | M |
+| N5  | `code_graph` (tree-sitter) | `find_references`, `find_definition`, `call_hierarchy` | L |
+| N6  | `secrets_scan` | gitleaks tarzı diff'te secret detection | S |
+| N7  | `coverage_report` | nyc/c8/coverage.py output parse → focus low-coverage files | S |
+| N8  | `bench_runner` | hyperfine/wrk/k6 wrapper — perf regression | S |
 
 ---
 
-## C. First-party skill kütüphanesi (`~/.arix/skills/`)
-
-Şu an sadece `example.md` var. Bundle'lanacak skill'ler:
-
-| #   | Skill | İçerik |
-|-----|---|---|
-| C1  | `tdd` | RED-GREEN-REFACTOR döngüsü, test-first zorlama |
-| C2  | `code-reviewer` | Security, perf, maintainability checklist |
-| C3  | `debugger` | Hipotez → repro → bisect → root-cause workflow |
-| C4  | `refactor` | SOLID, naming, abstraction extraction kuralları |
-| C5  | `security-auditor` | OWASP Top 10, secret detection, dependency CVE |
-| C6  | `perf-analyzer` | Profiling önerisi, hot path tespiti |
-| C7  | `architect` | Mermaid + ADR + trade-off analizi |
-| C8  | `migrator` | Framework version upgrade (React 18→19, Next 14→15 vs.) |
-| C9  | `documenter` | Inline docs + README + ADR üretimi |
-| C10 | `i18n` | String extract, locale file management |
-| C11 | `pr-author` | Conventional commit + PR body + test plan |
-| C12 | `data-engineer` | SQL optimization, schema design, ETL pipelines |
-
-→ `arix skill install <name>` komutu (zaten var, içerik bundle'lansın).
-
----
-
-## D. Bundled MCP server'lar (`arix mcp install <name>`)
-
-| #   | MCP | Sağladığı |
-|-----|---|---|
-| D1  | **filesystem** (resmi, anthropic/mcp-server-filesystem) | Sandboxed FS — şu an custom, MCP'ye geç |
-| D2  | **github** | Issue, PR, repo arama + file content |
-| D3  | **gitlab** | GitLab muadili |
-| D4  | **postgres** / **sqlite** | DB introspection + query |
-| D5  | **slack** | Channel, message, user lookup |
-| D6  | **linear** / **jira** / **notion** | Ticket sistemi |
-| D7  | **playwright** / **puppeteer** | Web automation |
-| D8  | **memory** (graph) | Kalıcı bilgi grafiği — proje memory'sinden zengin |
-| D9  | **sequential-thinking** | Chain-of-thought scaffold |
-| D10 | **time** | Tarih/zaman aritmetiği |
-| D11 | **fetch** (lightweight web) | URL'den content extract |
-| D12 | **sentry** | Hata izleme |
-| D13 | **kubernetes** | k8s cluster query |
-| D14 | **aws** / **gcp** / **azure** CLI wrapper | Cloud ops |
-| D15 | **figma** | Design token export, frame inspect |
-
-→ `arix mcp install github,postgres,playwright` ile tek komutla kur.
-
----
-
-## E. Provider eklemeleri
-
-| #   | Provider | Neden |
-|-----|---|---|
-| E1  | **xAI Grok** | Grok-4, real-time X verisi |
-| E2  | **DeepSeek** (V3, R1) | $0.14/M ucuz, Chinese-perf strong |
-| E3  | **Mistral** (Large-2, Codestral) | EU GDPR, Codestral coding-specialized |
-| E4  | **Together AI** | Llama 3.3 405B, Qwen 2.5 72B, hızlı inference |
-| E5  | **Groq** | LPU, 500+ tok/s — ultra-low latency completions |
-| E6  | **Fireworks AI** | Open-weight modelleri ucuz host |
-| E7  | **Perplexity** | Web-grounded answers (sonar models) |
-| E8  | **Cohere** (Command R+) | Strong tool use, RAG-tuned |
-| E9  | **Cerebras** | Inference hızı için (3000+ tok/s) |
-| E10 | **Replicate** | Custom fine-tunes, image/video |
-
----
-
-## F. DX / IDE entegrasyonu
-
-| #  | Hedef | Detay |
-|----|---|---|
-| F1 | **JetBrains plugin** (IntelliJ/WebStorm/PyCharm/GoLand) | VS Code'daki tüm özellikler |
-| F2 | **Neovim plugin** | telescope.nvim integration, inline completions via blink.cmp |
-| F3 | **Zed extension** | Native Rust extension |
-| F4 | **Warp/iTerm/Ghostty integration** | Block-aware terminal AI |
-| F5 | **Browser extension** | GitHub PR sayfasında inline review |
-| F6 | **Slack bot** | `/arix review PR-123` |
-| F7 | **GitHub App** | Auto-review on PR open, /arix-fix komutu |
-
----
-
-## G. UX / Dashboard / TUI
-
-| #  | Özellik | Effort |
-|----|---|---|
-| G1 | **TUI'da split-pane diff editör** (Ink) | M |
-| G2 | **Dashboard'da tool-call timeline** (Gantt-style) | S |
-| G3 | **Dashboard'da plan görselleştirme** (Mermaid live render) | S |
-| G4 | **Voice mode** — Whisper STT + ElevenLabs TTS, hands-free coding | M |
-| G5 | **Inline screenshot annotation** — Cmd+Shift+4 → upload → AI okur | S |
-| G6 | **Session sharing** — `arix session share <id>` → public URL | M |
-| G7 | **Replay mode** — geçmiş session'ı turn-by-turn animate et | S |
-
----
-
-## H. Cost / Budget intelligence
-
-| #  | Özellik | Etki |
-|----|---|---|
-| H1 | **Adaptive caching** — sık kullanılan system prompt'u Anthropic prompt cache'e otomatik koy | -%30 maliyet |
-| H2 | **Predictive routing** — turn'den önce maliyet+latency tahmini, eşiğe göre auto-downgrade | -%20 |
-| H3 | **Hard budget kill-switch** — limite ulaşınca AgentLoop graceful stop (Z9 var ama warning-only) | UX |
-| H4 | **Org-level pooling** — birden fazla kullanıcı tek API key havuzunu paylaşsın, audit + per-user limit | Team |
-| H5 | **Cost regression alerts** — bir önceki haftaya göre 2x artış varsa uyarı | Ops |
-| H6 | **Per-skill cost reports** | Granular insight |
-
----
-
-## I. Quality / Observability
-
-| #  | Özellik | Detay |
-|----|---|---|
-| I1 | **OpenTelemetry export** | Trace her tool call + LLM request, Honeycomb/Grafana'ya gönder |
-| I2 | **Eval suite** (`arix eval`) | SWE-Bench / HumanEval + custom in-repo eval'ler |
-| I3 | **Golden traces** — known-good session diff replay | Regression catcher |
-| I4 | **Anonymous telemetry opt-in** | Anlamlı feature improvement metrikleri |
-| I5 | **Audit log** (immutable) | Compliance — kim ne zaman ne yaptı |
-| I6 | **Sandbox enforcement** — yazma tool'larını allow-list path zorunlu yap, escape catch | Security |
-
----
-
-## J. Distribution / community
+## O. UX / TUI / dashboard
 
 | #  | İş | Effort |
 |----|---|---|
-| J1 | **Plugin/skill marketplace sitesi** (`marketplace.arix.amirtech.ai`) | L |
-| J2 | **Public docs sitesi** (`docs.arix.amirtech.ai`) — Mintlify/Docusaurus | M |
-| J3 | **Quickstart videoları** | S |
-| J4 | **Discord topluluğu** + `/arix help` Discord bot | S |
-| J5 | **HN/Reddit/X launch** — post hazır + benchmark grafikleri | S |
-| J6 | **Comparison page** — Cursor/Copilot/Claude Code ile head-to-head | S |
-| J7 | **VSCode Marketplace yayını** + JetBrains Marketplace | S |
+| O1 | TUI split-pane diff editor (Ink) | M |
+| O2 | Dashboard'da tool-call Gantt timeline | S |
+| O3 | Dashboard'da plan + spec progress (Mermaid live render) | S |
+| O4 | Voice mode — Whisper STT + ElevenLabs/Coqui TTS | M |
+| O5 | Replay mode — `arix replay <sessionId>` turn-by-turn animate | S |
+| O6 | Inline screenshot annotation — Cmd+Shift+4 capture'ı oto-upload | S |
+| O7 | TUI'da MCP server status panel (ping + tool count) | S |
+| O8 | TUI'da workspace switcher (multi-repo) | S |
+| O9 | Cost-of-this-turn rozeti (TUI status bar'da) | S |
 
 ---
 
-## K. Differentiator (kimsede olmayan)
+## P. Cost / routing intelligence
 
-| #  | Özellik | Neden farklı |
+| #  | İş | Effort |
 |----|---|---|
-| K1 | **Cost arbitrage on-the-fly** — tier'lar arası real-time geçiş, "şu prompt'u Sonnet yerine DeepSeek'le %1 kalite kaybıyla %95 ucuz yap" | Yok |
-| K2 | **Local-first encryption** — sessions/memory `~/.arix/` içinde AES-256, kullanıcı passphrase | Yok |
-| K3 | **Multi-repo workspaces** — tek session'da N repo'ya bağlan, cross-repo refactor | Cursor sınırlı |
-| K4 | **Reversible runs** — her tool çağrısı bir undo stack'e yazılır, `arix undo` | Yok |
-| K5 | **Agent → CI köprüsü** — `arix loop --watch` PR oluşana kadar otomatik CI feedback ile düzelt | Cursor Background var, gizli |
-| K6 | **Spec-driven** — `arix spec <feature.md>` → spec'i implementation'a expand, spec ile diff | Yok |
+| P1 | Predictive routing — turn öncesi cost+latency tahmini, eşik bazlı auto-downgrade | M |
+| P2 | Per-skill cost reports (`arix cost --by-skill`) | S |
+| P3 | Cost regression alerts (haftalık baseline 2x ise uyarı) | S |
+| P4 | Org-level pooling (multi-user budget havuzu, per-user limit) | L |
+| P5 | Adaptive prompt caching — Anthropic cache_control auto-injection | M |
+| P6 | Token estimator pre-flight (turn göndermeden tahmin → onay) | S |
 
 ---
 
+## Q. Distribution / community
 
+| #  | İş | Effort |
+|----|---|---|
+| Q1 | `docs.arix.amirtech.ai` — Mintlify veya Docusaurus | M |
+| Q2 | `marketplace.arix.amirtech.ai` — skill/plugin discovery + install | L |
+| Q3 | VSCode Marketplace yayını | S |
+| Q4 | JetBrains Marketplace yayını | M |
+| Q5 | Discord topluluğu + `/arix help` bot | S |
+| Q6 | Comparison page (vs Cursor/Copilot/Claude Code/Aider) | S |
+| Q7 | HN/Reddit/X launch — benchmark grafikleri ile post | S |
+| Q8 | Quickstart video serisi (5x 3 dk) | M |
+| Q9 | `arix init` → opinionated CLAUDE.md/AGENTS.md template seçici | S |
+
+---
+
+## R. Yeni differentiator fikirler (kimsede yok)
+
+| #  | Fikir | Neden farklı |
+|----|---|---|
+| R1 | **Agent-to-agent gossip** — birden fazla arix session'ı yerel pub-sub üzerinden konuşsun (CR worker + lint worker + test worker eş zamanlı) | Yok |
+| R2 | **Time-travel debug** — her tool call'da state snapshot, timeline'da geri sar/oynat | Yok |
+| R3 | **Cost-bounded refactor** — "X'i refactor et ama $0.50 altında kal" — bütçe biterse dur, kısmi sonuç ver | Yok |
+| R4 | **CI drift watcher** — spec hash + code hash CI'da kontrol edilir, eskiyse PR yorumu açılır | Yok |
+| R5 | **Privacy-aware routing** — hassas string (PII regex/secret) görüldüğünde otomatik local-only model'e düş | Yok |
+| R6 | **Cross-session memory graph** — paylaşılan sembol grafiği üzerinden geçmiş session'ları auto-link | Yok |
+| R7 | **Confidence calibration** — assistant her iddia için 0..1 self-confidence verir; düşük olanlar UI'da işaretli | Yok |
+| R8 | **Reversible diff merge** — 3 farklı modelin önerdiği diff'i interactive merge-tool'la birleştir | Yok |
+| R9 | **Token leak detector** — chat.md / log içinde API key sızıntısı varsa redact et | Privacy |
+| R10| **Local fine-tune loop** — kullanıcının kabul/red ettiği diff'lerden LoRA dataset üret | Personalization |
+
+---
+
+## S. IDE & ecosystem (büyük effort — kendi sprint'leri)
+
+| #  | İş | Effort |
+|----|---|---|
+| S1 | JetBrains plugin (IntelliJ/WebStorm/PyCharm/GoLand) | L |
+| S2 | Neovim plugin (telescope + blink.cmp completions) | L |
+| S3 | Zed extension (Rust) | L |
+| S4 | GitHub App (auto PR review, `/arix-fix` comment trigger) | L |
+| S5 | Slack bot (`/arix review PR-123`) | M |
+| S6 | Warp/iTerm/Ghostty block-aware integration | M |
+| S7 | Browser extension — GitHub PR sayfasında inline review | M |
+
+---
+
+## T. Hardening / DevOps
+
+| #  | İş | Effort |
+|----|---|---|
+| T1 | tsup → bundler-only build, `tsc --emitDeclarationOnly` decouple | S |
+| T2 | E2E smoke suite — `arix init → arix chat → arix session list` | S |
+| T3 | Release pipeline — version bump + CHANGELOG + tag + npm publish + Homebrew formula update | M |
+| T4 | Docker base image küçült (multi-stage, distroless) | S |
+| T5 | Bun/Deno uyumluluk testi | M |
+| T6 | Windows CI matrix (şu an sadece Linux) | S |
+| T7 | Plugin sandbox (vm2/isolated-vm yerine vm.Module + permission gate) | L |
+
+---
+
+## Öneri: ilk 2 hafta
+
+**Sprint 1 (S items, max etki):** L1, L2, L4, L5, L6, L7, L8, L11, M3, P6, O9, T2.
+12 item, hepsi S, doğrudan kullanıcıya yansıyan UX/quality/cost kazançları.
+
+**Sprint 2 (M items, derinlik):** L3, L10, M1 (lite), N1, N2, P1, Q1.
+Routing zekası + eksik tool'lar + dokümantasyon temeli.
+
+**Strateji:** S→M→L sırasında ilerle. Her sprint sonu `arix eval` (M1) baseline'ına karşı regression check.
