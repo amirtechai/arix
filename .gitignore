@@ -11,4 +11,3 @@ coverage/
 *.log
 packages/arix/bin/
 .wrangler/
-.github/workflows/
