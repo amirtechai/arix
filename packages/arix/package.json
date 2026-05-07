@@ -1,6 +1,6 @@
 {
-  "name": "arix",
-  "version": "0.2.2",
+  "name": "@arix-code/arix",
+  "version": "0.2.3",
   "description": "Arix — the world's best AI coding CLI. Provider-agnostic: Claude, GPT-4, Gemini, Llama, and more.",
   "keywords": [
     "ai",
