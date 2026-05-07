@@ -10,12 +10,22 @@ import { join, relative, extname } from 'node:path'
 import { homedir } from 'node:os'
 import { createRequire } from 'node:module'
 
-// node:sqlite is experimental in Node 22. Load via createRequire so the import
-// is synchronous and doesn't make the entire module async.
+// node:sqlite is experimental in Node 22.5+. Load lazily so importing this
+// module on older Node doesn't throw — only constructing WikiIndex does.
 const _require = createRequire(import.meta.url)
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const { DatabaseSync } = _require('node:sqlite') as {
-  DatabaseSync: new (path: string) => NodeSqliteDatabase
+let _DatabaseSync: (new (path: string) => NodeSqliteDatabase) | null = null
+function getDatabaseSync(): new (path: string) => NodeSqliteDatabase {
+  if (_DatabaseSync) return _DatabaseSync
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const mod = _require('node:sqlite') as {
+      DatabaseSync: new (path: string) => NodeSqliteDatabase
+    }
+    _DatabaseSync = mod.DatabaseSync
+    return _DatabaseSync
+  } catch {
+    throw new Error('node:sqlite not available on this Node runtime. Wiki index requires Node 22.5+.')
+  }
 }
 
 // Minimal type shim for node:sqlite DatabaseSync
@@ -82,6 +92,7 @@ export class WikiIndex {
 
   private open(): NodeSqliteDatabase {
     if (!this.db) {
+      const DatabaseSync = getDatabaseSync()
       this.db = new DatabaseSync(this.dbPath)
       this.initSchema()
     }
