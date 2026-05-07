@@ -34,6 +34,7 @@ import { registerComplete } from './commands/complete.js'
 import { registerUndo } from './commands/undo.js'
 import { registerWorkspace } from './commands/workspace.js'
 import { registerSpec } from './commands/spec.js'
+import { registerEval } from './commands/eval.js'
 
 installGlobalErrorHandlers()
 
@@ -47,7 +48,7 @@ const SUBCOMMANDS = new Set([
   'completions', 'tools', 'fix', 'loop', 'serve', 'feature', 'provider',
   'profile', 'wiki', 'pr', 'review', 'tdd', 'models', 'cost', 'memory',
   'plugin', 'mcp', 'ask', 'design', 'team', 'build', 'find',
-  'undo', 'workspace', 'ws', 'spec',
+  'undo', 'workspace', 'ws', 'spec', 'eval',
   'help', '--help', '-h', '--version', '-V',
 ])
 
@@ -116,5 +117,6 @@ registerComplete(program)
 registerUndo(program)
 registerWorkspace(program)
 registerSpec(program)
+registerEval(program)
 
 program.parse()
