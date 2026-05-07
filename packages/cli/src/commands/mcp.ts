@@ -12,7 +12,7 @@
 import type { Command } from 'commander'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { McpRegistry, McpClient } from '@arix/core'
+import { McpRegistry, McpClient, MCP_CATALOG, findMcpEntry, materialiseMcpEntry } from '@arix/core'
 import type { McpServerConfig } from '@arix/core'
 
 const configDir = join(homedir(), '.arix')
@@ -207,6 +207,57 @@ export function registerMcp(program: Command): void {
     })
 
   // ── mcp enable / disable ─────────────────────────────────────────────────
+
+  // ── mcp catalog ──────────────────────────────────────────────────────────
+
+  mcp
+    .command('catalog')
+    .description('List recommended MCP servers (installable via "arix mcp install <id>")')
+    .action(() => {
+      process.stdout.write(`\nAvailable MCP servers (${MCP_CATALOG.length}):\n\n`)
+      for (const e of MCP_CATALOG) {
+        process.stdout.write(`  ${e.id.padEnd(22)} ${e.description}\n`)
+        if (e.requiredEnv?.length) {
+          process.stdout.write(`  ${' '.repeat(22)} requires: ${e.requiredEnv.join(', ')}\n`)
+        }
+      }
+      process.stdout.write('\nInstall with: arix mcp install <id> [--env KEY=VALUE ...]\n\n')
+    })
+
+  // ── mcp install ──────────────────────────────────────────────────────────
+
+  mcp
+    .command('install <ids...>')
+    .description('Install one or more MCP servers from the curated catalog')
+    .option('--env <vars...>', 'Environment variables in KEY=VALUE format (applies to all)')
+    .action(async (ids: string[], opts: Record<string, unknown>) => {
+      const reg = makeRegistry()
+      await reg.load()
+      const env = parseKv(opts['env'] as string[] | undefined) ?? {}
+
+      for (const id of ids) {
+        const entry = findMcpEntry(id)
+        if (!entry) {
+          process.stderr.write(`✗ Unknown MCP id "${id}". Run "arix mcp catalog" to list options.\n`)
+          process.exitCode = 1
+          continue
+        }
+        const missing = (entry.requiredEnv ?? []).filter((k) => !(k in env) && !process.env[k])
+        if (missing.length > 0) {
+          process.stderr.write(`✗ "${id}" requires env vars: ${missing.join(', ')} (pass with --env KEY=VALUE)\n`)
+          process.exitCode = 1
+          continue
+        }
+        const filteredEnv: Record<string, string> = {}
+        for (const k of entry.requiredEnv ?? []) {
+          const v = env[k] ?? process.env[k]
+          if (v) filteredEnv[k] = v
+        }
+        const cfg = materialiseMcpEntry(entry, filteredEnv)
+        await reg.addServer(cfg)
+        process.stdout.write(`✓ Installed "${id}" (${entry.name})\n`)
+      }
+    })
 
   mcp
     .command('enable <name>')

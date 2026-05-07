@@ -12,3 +12,5 @@ export type {
   McpResource,
 } from './types.js'
 export { MCP_PROTOCOL_VERSION } from './types.js'
+export { MCP_CATALOG, findMcpEntry, materialiseMcpEntry } from './catalog.js'
+export type { McpCatalogEntry } from './catalog.js'
