@@ -2,7 +2,22 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mkdtemp, rm, writeFile, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { WikiIndex } from '../index.js'
+
+// node:sqlite requires Node 22.5+. Probe before importing the wiki module
+// (which loads node:sqlite eagerly).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let WikiIndex: any = null
+let sqliteAvailable = false
+try {
+  // Synchronous require so the probe runs deterministically in vitest's
+  // ESM-but-with-cjs-interop transform pipeline.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { createRequire } = await import('node:module')
+  const req = createRequire(import.meta.url)
+  req('node:sqlite')
+  sqliteAvailable = true
+  WikiIndex = (await import('../index.js')).WikiIndex
+} catch { /* skipped on older Node */ }
 
 let workDir: string
 let dbPath: string
@@ -60,7 +75,9 @@ afterEach(async () => {
   await rm(workDir, { recursive: true, force: true })
 })
 
-describe('WikiIndex', () => {
+const d = sqliteAvailable ? describe : describe.skip
+
+d('WikiIndex', () => {
   it('builds an index and returns stats', async () => {
     const index = new WikiIndex(dbPath)
     const stats = await index.build(workDir)
@@ -80,7 +97,7 @@ describe('WikiIndex', () => {
     index.close()
 
     expect(results.length).toBeGreaterThan(0)
-    const authResult = results.find((r) => r.filePath.includes('auth'))
+    const authResult = results.find((r: { filePath: string; content: string }) => r.filePath.includes('auth'))
     expect(authResult).toBeDefined()
     expect(authResult?.content).toContain('login')
   })

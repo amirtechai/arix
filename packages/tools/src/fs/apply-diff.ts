@@ -1,5 +1,5 @@
 import { readFile, writeFile } from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { resolve, sep } from 'node:path'
 import { ArixError } from '@arix/core'
 import type { Tool, ToolResult } from '@arix/core'
 
@@ -56,7 +56,7 @@ function assertAllowedPath(target: string, allowedPaths: string[]): void {
   const resolved = resolve(target)
   const allowed = allowedPaths.some((p) => {
     const base = resolve(p)
-    return resolved === base || resolved.startsWith(base + '/')
+    return resolved === base || resolved.startsWith(base + sep)
   })
   if (!allowed) {
     throw new ArixError('PATH_FORBIDDEN', `Path not allowed: ${target}`)

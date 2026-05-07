@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process'
-import { resolve } from 'node:path'
+import { resolve, sep } from 'node:path'
 import { parse as parseShell } from 'shell-quote'
 import { ArixError } from '@arix/core'
 import type { Tool, ToolResult } from '@arix/core'
@@ -70,7 +70,7 @@ export class ShellExecTool implements Tool {
     // Validate cwd is within allowed paths
     const allowed = this.allowedPaths.some((p) => {
       const base = resolve(p)
-      return cwd === base || cwd.startsWith(base + '/')
+      return cwd === base || cwd.startsWith(base + sep)
     })
     if (!allowed) {
       throw new ArixError('PATH_FORBIDDEN', `Working directory not allowed: ${cwd}`)

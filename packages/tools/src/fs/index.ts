@@ -1,5 +1,5 @@
 import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises'
-import { resolve, relative, join, dirname } from 'node:path'
+import { resolve, relative, join, dirname, sep } from 'node:path'
 import { existsSync } from 'node:fs'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
@@ -15,7 +15,8 @@ function assertAllowedPath(target: string, allowedPaths: string[]): void {
   const resolved = resolve(target)
   const allowed = allowedPaths.some((p) => {
     const base = resolve(p)
-    return resolved === base || resolved.startsWith(base + '/')
+    // Use platform separator so Windows paths (C:\foo\bar) work correctly.
+    return resolved === base || resolved.startsWith(base + sep)
   })
   if (!allowed) {
     throw new ArixError('PATH_FORBIDDEN', `Path not allowed: ${target}`)
