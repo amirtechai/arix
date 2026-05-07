@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arix — Provider-agnostic AI coding agent for the terminal</title>
+  <meta name="description" content="Arix is an open-source CLI agent that runs against 21 LLM providers, ships 12 first-party skills and 21 MCP servers, and adds cost-bounded runs, multi-repo workspaces, eval suites, undo, and privacy-aware routing." />
+  <meta name="theme-color" content="#0EBEAA" />
+  <link rel="icon" type="image/svg+xml" href="./arix-mark.svg" />
+  <meta property="og:title" content="Arix — Provider-agnostic AI coding agent" />
+  <meta property="og:description" content="The neutral CLI runtime: bring any provider, any IDE, any MCP server. Reproducible, auditable, cost-aware." />
+  <meta property="og:image" content="./arix-logo.svg" />
+  <meta property="og:url" content="https://arix.amirtech.ai" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root {
+      --turq-50:  #E6FBF7;
+      --turq-100: #BFF4E9;
+      --turq-200: #7DF0DF;
+      --turq-300: #2EE0CB;
+      --turq-400: #16D5C4;
+      --turq-500: #0EBEAA;
+      --turq-600: #0AA194;
+      --turq-700: #0A8478;
+      --turq-800: #0E5F58;
+      --turq-900: #0E2E2A;
+
+      --ink:      #0E2E2A;
+      --ink-soft: #1F4744;
+      --muted:    #5C7A77;
+      --line:     #DCEFEC;
+      --bg:       #FAFFFE;
+      --bg-soft:  #F2FBF9;
+      --code-bg:  #0E2E2A;
+      --code-fg:  #BFF4E9;
+      --shadow:   0 1px 2px rgba(14, 46, 42, .04), 0 8px 24px rgba(14, 46, 42, .06);
+      --shadow-lg:0 4px 14px rgba(14, 46, 42, .06), 0 24px 60px rgba(14, 46, 42, .12);
+      --radius:   14px;
+      --radius-sm:8px;
+      --max-w:    1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--turq-700); text-decoration: none; }
+    a:hover { color: var(--turq-500); }
+    h1, h2, h3, h4 { color: var(--ink); margin: 0 0 0.5em; line-height: 1.2; letter-spacing: -0.01em; }
+    h1 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; }
+    h3 { font-size: 1.18rem; font-weight: 700; }
+    p  { margin: 0 0 0.9em; color: var(--ink-soft); }
+    code { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; }
+
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+
+    /* ───── nav ───── */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(250, 255, 254, 0.85);
+      backdrop-filter: saturate(160%) blur(10px);
+      -webkit-backdrop-filter: saturate(160%) blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px; max-width: var(--max-w); margin: 0 auto;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--ink); }
+    .brand img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { color: var(--ink-soft); font-size: 0.94rem; }
+    .nav-links a:hover { color: var(--turq-600); }
+    .nav-cta {
+      background: var(--turq-500); color: #fff !important;
+      padding: 8px 16px; border-radius: 8px; font-size: 0.92rem; font-weight: 600;
+      transition: background .15s;
+    }
+    .nav-cta:hover { background: var(--turq-600); color: #fff !important; }
+    @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+    /* ───── hero ───── */
+    .hero {
+      position: relative;
+      padding: 100px 0 80px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(14, 190, 170, 0.18), transparent 70%),
+        linear-gradient(180deg, #fff, var(--bg-soft));
+    }
+    .hero::after {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--turq-100) 1px, transparent 1px),
+        linear-gradient(90deg, var(--turq-100) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black, transparent 75%);
+      opacity: 0.55; pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; text-align: center; max-width: 900px; margin: 0 auto; padding: 0 24px; }
+    .hero-logo { width: 96px; height: 96px; border-radius: 22px; box-shadow: var(--shadow-lg); margin-bottom: 28px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--turq-50); color: var(--turq-700);
+      padding: 6px 12px; border-radius: 999px;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em;
+      border: 1px solid var(--turq-100);
+      margin-bottom: 22px;
+    }
+    .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--turq-500); }
+    .hero h1 { color: var(--ink); }
+    .hero h1 .accent { background: linear-gradient(110deg, var(--turq-600), var(--turq-400) 60%, var(--turq-300)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p.lead { font-size: 1.18rem; color: var(--ink-soft); margin: 18px auto 32px; max-width: 720px; }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px; border-radius: 10px; font-weight: 600; font-size: 0.96rem;
+      transition: transform .12s, box-shadow .15s, background .15s;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--turq-500); color: #fff !important; box-shadow: 0 6px 18px rgba(14,190,170,.4); }
+    .btn-primary:hover { background: var(--turq-600); transform: translateY(-1px); }
+    .btn-secondary { background: #fff; color: var(--ink) !important; border-color: var(--line); }
+    .btn-secondary:hover { border-color: var(--turq-300); color: var(--turq-700) !important; }
+
+    /* install block */
+    .install {
+      max-width: 620px; margin: 8px auto 0;
+      background: var(--code-bg);
+      color: var(--code-fg);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(125, 240, 223, 0.15);
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.95rem;
+    }
+    .install .prompt { color: var(--turq-300); margin-right: 8px; }
+    .install button {
+      background: rgba(125, 240, 223, 0.12); color: var(--code-fg);
+      border: 1px solid rgba(125, 240, 223, 0.3);
+      border-radius: 6px; padding: 6px 12px; cursor: pointer;
+      font-family: inherit; font-size: 0.82rem;
+      transition: background .15s;
+    }
+    .install button:hover { background: rgba(125, 240, 223, 0.22); }
+
+    /* trust strip */
+    .trust { padding: 30px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #fff; }
+    .trust-row { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 28px; align-items: center; opacity: 0.85; }
+    .trust .stat { text-align: center; }
+    .trust .stat .num { font-size: 1.6rem; font-weight: 800; color: var(--turq-700); letter-spacing: -0.02em; }
+    .trust .stat .lbl { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ───── sections ───── */
+    section { padding: 80px 0; }
+    section.alt { background: var(--bg-soft); }
+    .section-head { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+    .section-head .eyebrow { color: var(--turq-600); font-weight: 700; font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; display: block; }
+
+    /* feature grid */
+    .feat-grid {
+      display: grid; gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .feat {
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 28px; box-shadow: var(--shadow);
+      transition: transform .15s, box-shadow .2s, border-color .2s;
+    }
+    .feat:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--turq-200); }
+    .feat .icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--turq-100), var(--turq-200));
+      display: grid; place-items: center;
+      color: var(--turq-700); margin-bottom: 18px;
+    }
+    .feat .icon svg { width: 22px; height: 22px; }
+    .feat h3 { margin-bottom: 8px; }
+    .feat p { font-size: 0.94rem; margin-bottom: 0; }
+
+    /* deep-dive */
+    .deep {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 80px;
+    }
+    .deep:last-child { margin-bottom: 0; }
+    .deep.flip > :first-child { order: 2; }
+    @media (max-width: 860px) {
+      .deep { grid-template-columns: 1fr; gap: 28px; }
+      .deep.flip > :first-child { order: 0; }
+    }
+    .deep h2 { font-size: 1.7rem; margin-bottom: 12px; }
+    .deep ul { padding-left: 18px; margin: 18px 0 0; color: var(--ink-soft); }
+    .deep ul li { margin-bottom: 8px; }
+    .deep ul li b { color: var(--ink); }
+    .deep .pill { display: inline-block; padding: 4px 12px; background: var(--turq-50); color: var(--turq-700); border-radius: 999px; font-size: 0.8rem; font-weight: 600; margin-bottom: 14px; border: 1px solid var(--turq-100); }
+    .code-pane {
+      background: var(--code-bg); color: var(--code-fg);
+      border-radius: 12px; padding: 22px;
+      font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.86rem; line-height: 1.6;
+      box-shadow: var(--shadow-lg); overflow-x: auto;
+      border: 1px solid rgba(125, 240, 223, 0.15);
+    }
+    .code-pane .cmt { color: #6FAEA4; }
+    .code-pane .pmpt { color: var(--turq-300); }
+    .code-pane .out { color: #BFF4E9; opacity: 0.78; }
+    .code-pane .key { color: #FFD479; }
+
+    /* comparison table */
+    .cmp-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--line); background: #fff; }
+    .cmp { width: 100%; border-collapse: collapse; min-width: 760px; font-size: 0.92rem; }
+    .cmp th, .cmp td { padding: 12px 14px; text-align: center; border-bottom: 1px solid var(--line); }
+    .cmp th:first-child, .cmp td:first-child { text-align: left; }
+    .cmp thead th { background: var(--bg-soft); color: var(--ink); font-weight: 700; font-size: 0.86rem; }
+    .cmp thead th.us { background: linear-gradient(180deg, var(--turq-50), var(--turq-100)); color: var(--turq-800); }
+    .cmp tbody tr:hover td { background: var(--bg-soft); }
+    .cmp tbody td.us { background: rgba(14, 190, 170, 0.04); font-weight: 600; }
+    .cmp .yes { color: var(--turq-600); font-weight: 700; }
+    .cmp .partial { color: #C28A2C; }
+    .cmp .no { color: #C9D6D4; }
+    .cmp .row-label { color: var(--ink); font-weight: 600; }
+    .cmp .row-label small { display: block; color: var(--muted); font-weight: 400; font-size: 0.82rem; margin-top: 2px; }
+
+    /* providers grid */
+    .provs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .provs span { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 0.85rem; color: var(--ink-soft); }
+    .provs span.hi { background: var(--turq-50); border-color: var(--turq-200); color: var(--turq-800); font-weight: 600; }
+
+    /* quickstart */
+    .qs-grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .qs { background: #fff; border-radius: var(--radius); padding: 24px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .qs .step { color: var(--turq-600); font-weight: 800; font-size: 1.4rem; margin-bottom: 6px; }
+    .qs h3 { margin-bottom: 10px; }
+    .qs pre { background: var(--code-bg); color: var(--code-fg); padding: 12px 14px; border-radius: 8px; font-size: 0.84rem; margin: 0; overflow-x: auto; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+    /* CTA */
+    .cta {
+      text-align: center; padding: 90px 24px;
+      background: linear-gradient(135deg, var(--turq-700) 0%, var(--turq-500) 70%, var(--turq-400) 100%);
+      color: #fff;
+      position: relative; overflow: hidden;
+    }
+    .cta::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.12), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.08), transparent 40%);
+      pointer-events: none;
+    }
+    .cta h2 { color: #fff; font-size: 2.2rem; margin-bottom: 14px; position: relative; }
+    .cta p { color: rgba(255,255,255,0.92); margin: 0 auto 26px; max-width: 600px; position: relative; }
+    .cta .btn { position: relative; }
+    .cta .btn-primary { background: #fff; color: var(--turq-700) !important; box-shadow: 0 6px 24px rgba(0,0,0,0.18); }
+    .cta .btn-primary:hover { background: var(--turq-50); }
+    .cta .btn-secondary { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: #fff !important; }
+    .cta .btn-secondary:hover { background: rgba(255,255,255,0.2); color: #fff !important; }
+
+    /* footer */
+    footer { background: var(--ink); color: #BFD4D2; padding: 60px 24px 30px; }
+    .foot-inner { max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+    @media (max-width: 720px) { .foot-inner { grid-template-columns: 1fr 1fr; } }
+    footer h4 { color: #fff; font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+    footer a { color: #BFD4D2; display: block; margin-bottom: 8px; font-size: 0.92rem; }
+    footer a:hover { color: var(--turq-300); }
+    footer .brand-foot { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; }
+    footer .brand-foot img { width: 36px; height: 36px; border-radius: 8px; }
+    footer p.tag { font-size: 0.88rem; color: #8CA8A5; max-width: 320px; }
+    .foot-bottom { max-width: var(--max-w); margin: 40px auto 0; padding-top: 22px; border-top: 1px solid #1F4744; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.84rem; color: #5C7A77; }
+
+    /* utility */
+    .center { text-align: center; }
+    .mb-sm { margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- ───── NAV ───── -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <img src="./arix-mark.svg" alt="" />
+      <span>Arix</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#compare">Compare</a>
+      <a href="#install">Install</a>
+      <a href="https://github.com/amirtechai/arix" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/amirtechai/arix#readme" target="_blank" rel="noopener" class="nav-cta">Docs →</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ───── HERO ───── -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <img src="./arix-logo.svg" alt="Arix logo" class="hero-logo" />
+    <span class="badge"><span class="dot"></span>v0.2.3 · MIT licensed · Open source</span>
+    <h1>The <span class="accent">neutral</span> AI coding agent<br/>that lives in your terminal.</h1>
+    <p class="lead">
+      Arix is an open-source CLI agent that runs against <b>21 LLM providers</b>,
+      ships <b>12 first-party skills</b> and <b>21 MCP servers</b>, and adds the things production
+      teams actually need: cost-bounded runs, multi-repo workspaces, eval suites,
+      audit logs, undo, and privacy-aware routing.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#install">Install Arix &rarr;</a>
+      <a class="btn btn-secondary" href="https://github.com/amirtechai/arix" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 5.8c1.02.01 2.05.14 3.01.4 2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.28 0 .32.21.7.83.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        View on GitHub
+      </a>
+    </div>
+    <div class="install">
+      <span><span class="prompt">$</span> npm i -g @arix-code/arix</span>
+      <button onclick="navigator.clipboard.writeText('npm i -g @arix-code/arix'); this.textContent='Copied'; setTimeout(()=>this.textContent='Copy', 1500)">Copy</button>
+    </div>
+  </div>
+</section>
+
+<!-- ───── TRUST STRIP ───── -->
+<div class="trust">
+  <div class="container trust-row">
+    <div class="stat"><div class="num">21</div><div class="lbl">LLM Providers</div></div>
+    <div class="stat"><div class="num">21</div><div class="lbl">MCP Servers</div></div>
+    <div class="stat"><div class="num">12</div><div class="lbl">Bundled Skills</div></div>
+    <div class="stat"><div class="num">25+</div><div class="lbl">Built-in Tools</div></div>
+    <div class="stat"><div class="num">384</div><div class="lbl">Tests passing</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">Vendor lock-in</div></div>
+  </div>
+</div>
+
+<!-- ───── PROVIDERS ───── -->
+<section class="alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Bring your own model</span>
+      <h2>One CLI. Every provider.</h2>
+      <p>Pick the model that fits the task — Arix routes the call. Switch any time without touching code or prompts.</p>
+    </div>
+    <div class="provs">
+      <span class="hi">Anthropic</span>
+      <span class="hi">OpenAI</span>
+      <span class="hi">Gemini</span>
+      <span>OpenRouter</span>
+      <span>Azure OpenAI</span>
+      <span>AWS Bedrock</span>
+      <span>Vertex AI</span>
+      <span>Ollama</span>
+      <span>NVIDIA NIM</span>
+      <span>MiniMax</span>
+      <span>DeepSeek</span>
+      <span>Together AI</span>
+      <span>Groq</span>
+      <span>Fireworks</span>
+      <span>Cerebras</span>
+      <span>xAI / Grok</span>
+      <span>Perplexity</span>
+      <span>Mistral</span>
+      <span>Cohere</span>
+      <span>Replicate</span>
+    </div>
+  </div>
+</section>
+
+<!-- ───── FEATURES ───── -->
+<section id="features">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">What's inside</span>
+      <h2>Everything an agent needs to ship real code.</h2>
+      <p>Not a wrapper around an SDK. A complete runtime: routing, tooling, safety, observability, evaluation.</p>
+    </div>
+    <div class="feat-grid">
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
+        <h3>12 bundled skills</h3>
+        <p>TDD, code review, debugger, refactor, security audit, perf, architect, migrator, documenter, i18n, PR author, data engineer — disciplined system prompts, not vibes.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+        <h3>21 MCP servers, one command</h3>
+        <p><code>arix mcp install github postgres playwright</code> — GitHub, GitLab, Postgres, SQLite, Slack, Linear, Jira, Notion, Sentry, Figma, k8s, AWS/GCP/Azure, and more.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 2v6M5 8l-2 2M19 8l2 2M4 18h16M8 22h8"/></svg></div>
+        <h3>25+ first-party tools</h3>
+        <p>apply_diff, package_manager, test_runner, linter, http_client, db_query, secrets_scan, screenshot, docker_exec, git advanced (rebase/blame/bisect), and more.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 1v6m0 10v6M5 5l4 4M15 15l4 4M1 12h6m10 0h6M5 19l4-4M15 9l4-4"/></svg></div>
+        <h3>Cost arbitrage</h3>
+        <p>Hard <code>$</code> budget kill-switch, predictive routing, per-skill cost reports, regression alerts, adaptive prompt cache annotation. Stop paying Sonnet prices for Haiku tasks.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M3 7l9-4 9 4-9 4-9-4zM3 12l9 4 9-4M3 17l9 4 9-4"/></svg></div>
+        <h3>Multi-repo workspaces</h3>
+        <p>Attach <code>N</code> repos to a single session, refactor across them, share context. The cross-repo migration story Cursor and Copilot don't have.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 14l-4-4 4-4M15 4l4 4-4 4M5 22h14"/></svg></div>
+        <h3>Reversible runs</h3>
+        <p><code>arix undo</code>. Every destructive tool call snapshots first; one command rolls back. The lifeline you need when an agent goes off-rails on production code.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-5"/></svg></div>
+        <h3>Eval &amp; golden traces</h3>
+        <p><code>arix eval</code> runs skill regression and provider conformance suites. Golden trace replay catches behavioural drift before it ships.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h3>Privacy-aware routing</h3>
+        <p>PII or secrets in your payload? Arix detects and routes that turn to a local Ollama model automatically. Your tokens never leave the box.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <h3>Spec-driven dev</h3>
+        <p><code>arix spec feature.md</code> turns markdown into tracked tasks. <code>arix drift check</code> in CI fails the build when spec and code diverge.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 2l9 4v6c0 5-4 9-9 10S3 17 3 12V6l9-4z"/></svg></div>
+        <h3>Tamper-evident audit log</h3>
+        <p>Every tool call, confirmation, and provider request hashed into an SHA-256 chain. Compliance-grade auditability without external infrastructure.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M3 6l3-3 3 3M3 18l3 3 3-3M9 12h12M21 6L18 3l-3 3M21 18l-3 3-3-3"/></svg></div>
+        <h3>OpenTelemetry built-in</h3>
+        <p>One env var enables OTLP export to Honeycomb, Grafana, Tempo, Jaeger. Every tool call and LLM request becomes a span.</p>
+      </div>
+
+      <div class="feat">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+        <h3>Local-first encryption</h3>
+        <p>AES-256-GCM with scrypt key derivation for sessions and memory. Your conversations stay on your disk.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ───── DEEP DIVES ───── -->
+<section class="alt">
+  <div class="container">
+
+    <div class="deep">
+      <div>
+        <span class="pill">Cost control</span>
+        <h2>Spend $0.02 per task instead of $0.40.</h2>
+        <p>Predictive routing estimates the turn cost <i>before</i> calling. Cost arbitrage swaps to a cheaper model when quality stays within your tolerance. Hard budget kill-switch stops the agent before the bill blows up.</p>
+        <ul>
+          <li><b>Pre-flight estimate</b> — <code>arix cost preflight "&lt;prompt&gt;"</code></li>
+          <li><b>Hard cap</b> — agent stops gracefully when <code>$</code> budget hits zero</li>
+          <li><b>Per-skill reports</b> — see exactly which workflow burns money</li>
+          <li><b>Anthropic prompt cache</b> — auto-annotated for instant 90% input savings</li>
+        </ul>
+      </div>
+      <div>
+        <pre class="code-pane"><span class="cmt"># estimate before you call</span>
+<span class="pmpt">$</span> arix cost preflight "refactor auth module" \
+    --provider anthropic --model claude-sonnet-4-6
+<span class="out">Est input:    1,840 tokens
+Est cost:     $0.0083
+Recommended:  same model</span>
+
+<span class="cmt"># run with a hard budget cap</span>
+<span class="pmpt">$</span> arix chat --budget 0.50 --warn-at 0.8
+<span class="out">[budget] approaching cap: $0.4023 / $0.5000
+[Hard budget reached: $0.5012 — stopping.]</span>
+
+<span class="cmt"># weekly regression alert</span>
+<span class="pmpt">$</span> arix cost regression --factor 2
+<span class="out">⚠ ALERT — Spend rose 3.4× from $4.20 to $14.28</span></pre>
+      </div>
+    </div>
+
+    <div class="deep flip">
+      <div>
+        <pre class="code-pane"><span class="cmt"># attach 3 repos to one session</span>
+<span class="pmpt">$</span> arix workspace create monorepo \
+    ~/code/web ~/code/api ~/code/shared
+
+<span class="cmt"># cross-repo refactor in one turn</span>
+<span class="pmpt">$</span> arix --workspace monorepo
+<span class="out">▶ Rename `User` to `Account` across all repos</span>
+<span class="out">⚙ grep      pattern="User" path=...</span>
+<span class="out">⚙ apply_diff path=web/src/auth.ts ...</span>
+<span class="out">⚙ apply_diff path=api/src/models.ts ...</span>
+<span class="out">⚙ apply_diff path=shared/types.ts ...</span>
+<span class="out">[snapshot] 14 files captured for undo</span></pre>
+      </div>
+      <div>
+        <span class="pill">Cross-repo refactor</span>
+        <h2>Multi-repo workspaces, real refactors.</h2>
+        <p>Cursor sees one folder. Copilot sees the file. Arix sees your whole stack. Attach <code>N</code> repos and the agent navigates them as one workspace — paths, imports, types, and all.</p>
+        <ul>
+          <li><b>One CLI session</b> spans every repo</li>
+          <li><b>Allowed-path policy</b> — write tools refuse anything outside the workspace</li>
+          <li><b>Reversible</b> — <code>arix undo</code> rolls back the entire multi-repo edit</li>
+          <li><b>Cross-repo grep</b> finds matches in milliseconds via ripgrep</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="deep">
+      <div>
+        <span class="pill">Quality gates</span>
+        <h2>Eval suites &amp; golden traces. In CI.</h2>
+        <p>Run regression suites against your skills, against every provider you support, against your own custom in-repo eval cases. Golden traces compare today's agent run to a known-good NDJSON fingerprint and fail loudly on drift.</p>
+        <ul>
+          <li><b>Skill regression</b> — bundled prompts must include disciplined keywords</li>
+          <li><b>Provider conformance</b> — same 20 cases, every provider, side-by-side</li>
+          <li><b>Custom evals</b> — drop a JSON manifest, run with <code>arix eval --file</code></li>
+          <li><b>Drift watcher</b> — <code>arix drift check --all</code> in CI catches spec ↔ code drift</li>
+        </ul>
+      </div>
+      <div>
+        <pre class="code-pane"><span class="pmpt">$</span> arix eval --suite all
+<span class="out">Eval results:
+
+  skill-regression                    5/5 (100%)  avg=1.00  3ms
+  provider-conformance:anthropic      2/2 (100%)  avg=1.00  812ms
+  provider-conformance:groq           2/2 (100%)  avg=1.00  144ms
+  provider-conformance:deepseek       2/2 (100%)  avg=0.95  308ms
+
+✓ all evals passed</span>
+
+<span class="pmpt">$</span> arix drift check --all
+<span class="out">✓ ok     features/login.md
+✓ ok     features/billing.md
+✶ DRIFT  features/onboarding.md
+exit 1  <span class="cmt"># CI fails</span></span></pre>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───── COMPARISON ───── -->
+<section id="compare">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Honest comparison</span>
+      <h2>Where Arix wins. Where it doesn't.</h2>
+      <p>Updated 2026-Q2. We run all of these in production, so this matrix is from real use, not marketing.</p>
+    </div>
+
+    <div class="cmp-wrap">
+      <table class="cmp">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="us">Arix</th>
+            <th>Claude Code</th>
+            <th>OpenCode</th>
+            <th>Aider</th>
+            <th>Forge</th>
+            <th>Cursor</th>
+            <th>Copilot CLI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="row-label">Open source<small>MIT-licensed source we host</small></td>
+            <td class="us yes">✓</td><td class="partial">CLI only</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">CLI-native<small>Designed for the terminal</small></td>
+            <td class="us yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td class="row-label">Provider-agnostic<small>Bring any LLM</small></td>
+            <td class="us yes">21 providers</td><td class="no">Anthropic only</td><td class="partial">3 providers</td><td class="partial">~6 via API</td><td class="partial">~8</td><td class="partial">via API key</td><td class="no">GitHub only</td></tr>
+          <tr><td class="row-label">MCP catalog<small>One-command server install</small></td>
+            <td class="us yes">21 servers</td><td class="yes">✓</td><td class="partial">manual</td><td class="no">—</td><td class="no">—</td><td class="partial">manual</td><td class="no">—</td></tr>
+          <tr><td class="row-label">First-party skill library<small>Disciplined system prompts</small></td>
+            <td class="us yes">12 bundled</td><td class="partial">3-4</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Multi-repo workspaces<small>Cross-repo refactor</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="partial">single project</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Spec-driven dev + drift watcher<small>CI-friendly markdown specs</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Reversible runs (<code>undo</code>)<small>Roll back destructive ops</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="partial">git only</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Hard <code>$</code> budget kill-switch<small>Stop the bill, mid-task</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="partial">org cap</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Cost arbitrage<small>Auto-downgrade within tolerance</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Adaptive prompt cache<small>Anthropic cache hit auto</small></td>
+            <td class="us yes">✓</td><td class="yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Privacy-aware routing<small>PII → local model</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Eval suite<small>Skill + provider conformance</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Golden trace replay<small>Regression detection</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Tamper-evident audit log<small>SHA-256 chain</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">OpenTelemetry export<small>Honeycomb, Grafana, etc.</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Local-first encryption<small>AES-256-GCM at rest</small></td>
+            <td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Diff-style edits<small>Token-efficient patches</small></td>
+            <td class="us yes">apply_diff</td><td class="yes">✓</td><td class="yes">✓</td><td class="us yes">signature feature</td><td class="partial">basic</td><td class="partial">via Composer</td><td class="no">—</td></tr>
+          <tr><td class="row-label">IDE plugin<small>VSCode / JetBrains</small></td>
+            <td class="partial">VSCode WIP</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="us yes">native IDE</td><td class="us yes">native</td></tr>
+          <tr><td class="row-label">GitHub Action<small>Automated PR review</small></td>
+            <td class="us yes">arix-review</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td class="row-label">Reversible per-tool sandbox<small>Docker exec + path policy</small></td>
+            <td class="us yes">docker_exec</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="partial">workspace</td><td class="no">—</td></tr>
+          <tr><td class="row-label">Pricing model<small>What it costs to use</small></td>
+            <td class="us yes">free + your API key</td><td class="partial">your API key</td><td class="yes">free</td><td class="yes">free</td><td class="partial">freemium</td><td class="no">$20/mo + tokens</td><td class="no">$10/mo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="center" style="margin-top: 28px; color: var(--muted); font-size: 0.94rem;">
+      Pick the tool that fits your need. Pick <b>Arix</b> when you want <b>full control of your stack</b> — provider, hosting, audit trail, budget, and evaluation.
+    </p>
+  </div>
+</section>
+
+<!-- ───── INSTALL / QUICKSTART ───── -->
+<section class="alt" id="install">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Quickstart</span>
+      <h2>Three commands. You're in.</h2>
+      <p>No accounts, no logins, no usage caps. Set your provider key, type <code>arix chat</code>, ship.</p>
+    </div>
+
+    <div class="qs-grid">
+      <div class="qs">
+        <div class="step">1</div>
+        <h3>Install</h3>
+        <pre>npm i -g @arix-code/arix</pre>
+        <p style="margin-top: 12px;">Or with your favourite manager: <br/><code>pnpm add -g @arix-code/arix</code> · <code>brew install amirtechai/arix/arix</code></p>
+      </div>
+
+      <div class="qs">
+        <div class="step">2</div>
+        <h3>Set a provider key</h3>
+        <pre>export ANTHROPIC_API_KEY=sk-ant-...
+arix config set provider anthropic
+arix config set model claude-sonnet-4-6</pre>
+        <p style="margin-top: 12px;">21 providers supported. <code>arix provider list</code> to see all.</p>
+      </div>
+
+      <div class="qs">
+        <div class="step">3</div>
+        <h3>Chat &amp; ship</h3>
+        <pre>arix chat
+# or one-shot:
+arix --resume "fix the failing tests"</pre>
+        <p style="margin-top: 12px;">Confirmations on by default for write tools. Run <code>arix --help</code> to see every command.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 60px;">
+      <h3 class="center">Common next steps</h3>
+      <pre class="code-pane" style="margin: 22px auto 0; max-width: 760px;"><span class="cmt"># add MCP servers</span>
+<span class="pmpt">$</span> arix mcp install github postgres playwright \
+    --env GITHUB_PERSONAL_ACCESS_TOKEN=ghp_...
+
+<span class="cmt"># multi-repo workspace</span>
+<span class="pmpt">$</span> arix workspace create monorepo ~/code/web ~/code/api
+
+<span class="cmt"># spec-driven feature</span>
+<span class="pmpt">$</span> arix spec features/login.md
+<span class="pmpt">$</span> arix drift check --all       <span class="cmt"># in CI</span>
+
+<span class="cmt"># reverse a destructive change</span>
+<span class="pmpt">$</span> arix undo
+
+<span class="cmt"># scan for accidentally committed secrets</span>
+<span class="pmpt">$</span> arix redact session.log --check</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ───── FINAL CTA ───── -->
+<section class="cta">
+  <h2>Ready to take control of your AI stack?</h2>
+  <p>Open source. Provider-agnostic. Production-grade. Set up in 60 seconds.</p>
+  <div class="hero-actions" style="justify-content: center;">
+    <a class="btn btn-primary" href="https://github.com/amirtechai/arix" target="_blank" rel="noopener">⭐ Star on GitHub</a>
+    <a class="btn btn-secondary" href="https://github.com/amirtechai/arix#readme" target="_blank" rel="noopener">Read the docs</a>
+  </div>
+</section>
+
+<!-- ───── FOOTER ───── -->
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="brand-foot">
+        <img src="./arix-mark.svg" alt="" />
+        <span>Arix</span>
+      </div>
+      <p class="tag">The neutral AI coding agent that lives in your terminal. Built by <a href="https://amirtech.ai">amirtech.ai</a>. MIT licensed.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="#features">Features</a>
+      <a href="#compare">Comparison</a>
+      <a href="#install">Quickstart</a>
+      <a href="https://github.com/amirtechai/arix/releases" target="_blank" rel="noopener">Releases</a>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <a href="https://github.com/amirtechai/arix" target="_blank" rel="noopener">GitHub repo</a>
+      <a href="https://github.com/amirtechai/arix#readme" target="_blank" rel="noopener">Documentation</a>
+      <a href="https://github.com/amirtechai/arix/issues" target="_blank" rel="noopener">Issue tracker</a>
+      <a href="https://www.npmjs.com/package/@arix-code/arix" target="_blank" rel="noopener">npm package</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="https://amirtech.ai">amirtech.ai</a>
+      <a href="mailto:info@amirtech.ai">Contact</a>
+      <a href="https://github.com/amirtechai" target="_blank" rel="noopener">All projects</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 amirtech.ai · Arix is open source under the MIT license.</span>
+    <span>v0.2.3 · <a href="https://github.com/amirtechai/arix/security" target="_blank" rel="noopener" style="color: var(--turq-300);">Security</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
