@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@arix/core": "workspace:*",
+    "glob": "^13.0.6",
     "ignore": "^5.3.0",
     "recheck": "^4.5.0",
     "shell-quote": "^1.8.1",

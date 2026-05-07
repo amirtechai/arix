@@ -1,7 +1,6 @@
 import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises'
 import { resolve, relative, join, dirname } from 'node:path'
 import { existsSync } from 'node:fs'
-import { glob } from 'node:fs/promises'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { ArixError } from '@arix/core'
@@ -229,11 +228,10 @@ export class GlobTool implements Tool {
     const base = resolve((input['cwd'] as string | undefined) ?? this.projectRoot)
 
     try {
-      const matches: string[] = []
-      for await (const entry of glob(pattern, { cwd: base })) {
-        matches.push(entry)
-      }
-      matches.sort()
+      // Use the `glob` npm package — node:fs/promises#glob is experimental on
+      // Node <22 and unavailable on older runtimes.
+      const { glob } = await import('glob')
+      const matches = (await glob(pattern, { cwd: base, nodir: false })).sort()
       if (matches.length === 0) return { toolCallId: '', success: true, output: '(no matches)' }
       return { toolCallId: '', success: true, output: matches.join('\n') }
     } catch (err) {
