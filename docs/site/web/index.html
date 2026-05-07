@@ -31,16 +31,16 @@
       --lavender: #C7BFEA;
       --butter:   #F4E5B0;
 
-      /* dark surfaces */
-      --ink:      #EDEFEC;
-      --ink-soft: #C8CFC9;
-      --muted:    #8C9690;
-      --line:     #1F2724;
-      --bg:       #0A0E0C;
-      --bg-soft:  #0F1513;
-      --surface:  #141A18;
-      --surface-2:#1A211E;
-      --code-bg:  #060A08;
+      /* neutral dark surfaces (no green tint) */
+      --ink:      #ECECEE;
+      --ink-soft: #C7C7CB;
+      --muted:    #8A8A90;
+      --line:     #232328;
+      --bg:       #0D0D10;
+      --bg-soft:  #131317;
+      --surface:  #18181C;
+      --surface-2:#1E1E23;
+      --code-bg:  #07070A;
       --code-fg:  #D4F1E2;
       --shadow:   0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
       --shadow-lg:0 4px 14px rgba(0,0,0,.5), 0 24px 60px rgba(0,0,0,.55);
@@ -73,7 +73,7 @@
     /* ───── nav ───── */
     .nav {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(10, 14, 12, 0.72);
+      background: rgba(13, 13, 16, 0.75);
       backdrop-filter: saturate(160%) blur(14px);
       -webkit-backdrop-filter: saturate(160%) blur(14px);
       border-bottom: 1px solid var(--line);
@@ -88,11 +88,11 @@
     .nav-links a { color: var(--ink-soft); font-size: 0.94rem; }
     .nav-links a:hover { color: var(--turq-300); }
     .nav-cta {
-      background: var(--turq-400); color: #0A0E0C !important;
+      background: var(--turq-400); color: #0D0D10 !important;
       padding: 8px 16px; border-radius: 8px; font-size: 0.92rem; font-weight: 700;
       transition: background .15s;
     }
-    .nav-cta:hover { background: var(--turq-300); color: #0A0E0C !important; }
+    .nav-cta:hover { background: var(--turq-300); color: #0D0D10 !important; }
     @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
 
     /* ───── hero ───── */
@@ -101,21 +101,21 @@
       padding: 100px 0 80px;
       overflow: hidden;
       background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(130, 207, 160, 0.18), transparent 70%),
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(130, 207, 160, 0.10), transparent 70%),
         linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
     }
     .hero::after {
       content: ""; position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(130, 207, 160, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(130, 207, 160, 0.08) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
       background-size: 36px 36px;
       mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black, transparent 75%);
       -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, black, transparent 75%);
       opacity: 0.6; pointer-events: none;
     }
     .hero-inner { position: relative; z-index: 1; text-align: center; max-width: 900px; margin: 0 auto; padding: 0 24px; }
-    .hero-logo { max-width: 360px; width: 80%; height: auto; margin-bottom: 28px; filter: drop-shadow(0 12px 40px rgba(130, 207, 160, 0.18)); }
+    .hero-logo { width: 120px; height: 120px; border-radius: 24px; margin-bottom: 22px; box-shadow: 0 12px 40px rgba(130, 207, 160, 0.18); }
     .badge {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(130, 207, 160, 0.10); color: var(--turq-200);
@@ -135,7 +135,7 @@
       transition: transform .12s, box-shadow .15s, background .15s;
       border: 1px solid transparent;
     }
-    .btn-primary { background: var(--turq-400); color: #0A0E0C !important; box-shadow: 0 6px 22px rgba(130,207,160,.28); }
+    .btn-primary { background: var(--turq-400); color: #0D0D10 !important; box-shadow: 0 6px 22px rgba(130,207,160,.28); }
     .btn-primary:hover { background: var(--turq-300); transform: translateY(-1px); }
     .btn-secondary { background: var(--surface); color: var(--ink) !important; border-color: var(--line); }
     .btn-secondary:hover { border-color: var(--turq-400); color: var(--turq-200) !important; background: var(--surface-2); }
@@ -224,20 +224,20 @@
     .code-pane .out { color: var(--turq-100); opacity: 0.82; }
     .code-pane .key { color: var(--butter); }
 
-    /* comparison table */
-    .cmp-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--line); background: var(--surface); }
-    .cmp { width: 100%; border-collapse: collapse; min-width: 760px; font-size: 0.92rem; color: var(--ink-soft); }
-    .cmp th, .cmp td { padding: 12px 14px; text-align: center; border-bottom: 1px solid var(--line); }
+    /* comparison table — light surface for readability */
+    .cmp-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: 0 8px 28px rgba(0,0,0,0.35); border: 1px solid #E5E7EB; background: #FFFFFF; }
+    .cmp { width: 100%; border-collapse: collapse; min-width: 760px; font-size: 0.92rem; color: #374151; }
+    .cmp th, .cmp td { padding: 12px 14px; text-align: center; border-bottom: 1px solid #EEF0F3; }
     .cmp th:first-child, .cmp td:first-child { text-align: left; }
-    .cmp thead th { background: var(--bg-soft); color: var(--ink); font-weight: 700; font-size: 0.86rem; }
-    .cmp thead th.us { background: linear-gradient(180deg, rgba(130,207,160,0.16), rgba(130,207,160,0.06)); color: var(--turq-200); }
-    .cmp tbody tr:hover td { background: var(--surface-2); }
-    .cmp tbody td.us { background: rgba(130, 207, 160, 0.06); font-weight: 600; color: var(--ink); }
-    .cmp .yes { color: var(--turq-300); font-weight: 700; }
-    .cmp .partial { color: var(--butter); }
-    .cmp .no { color: #4A5550; }
-    .cmp .row-label { color: var(--ink); font-weight: 600; }
-    .cmp .row-label small { display: block; color: var(--muted); font-weight: 400; font-size: 0.82rem; margin-top: 2px; }
+    .cmp thead th { background: #F8FAFB; color: #111827; font-weight: 700; font-size: 0.86rem; border-bottom: 1px solid #E5E7EB; }
+    .cmp thead th.us { background: linear-gradient(180deg, #E5F4EC, #F2FAF6); color: #2A5F40; }
+    .cmp tbody tr:hover td { background: #F9FBFA; }
+    .cmp tbody td.us { background: rgba(111, 193, 140, 0.08); font-weight: 600; color: #111827; }
+    .cmp .yes { color: #3A8559; font-weight: 700; }
+    .cmp .partial { color: #B07A1F; }
+    .cmp .no { color: #C9CDD4; }
+    .cmp .row-label { color: #111827; font-weight: 600; }
+    .cmp .row-label small { display: block; color: #6B7280; font-weight: 400; font-size: 0.82rem; margin-top: 2px; }
 
     /* providers grid */
     .provs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
@@ -255,9 +255,9 @@
     .cta {
       text-align: center; padding: 90px 24px;
       background:
-        radial-gradient(circle at 20% 30%, rgba(130,207,160,0.18), transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(199,191,234,0.14), transparent 50%),
-        linear-gradient(135deg, #0F1513 0%, #141A18 100%);
+        radial-gradient(circle at 20% 30%, rgba(130,207,160,0.10), transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(199,191,234,0.08), transparent 50%),
+        linear-gradient(135deg, #131317 0%, #18181C 100%);
       color: var(--ink);
       position: relative; overflow: hidden;
       border-top: 1px solid var(--line);
@@ -266,8 +266,8 @@
     .cta::before {
       content: ""; position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(130, 207, 160, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(130, 207, 160, 0.06) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
       background-size: 36px 36px;
       mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black, transparent 75%);
       -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black, transparent 75%);
@@ -278,14 +278,14 @@
     .cta .btn { position: relative; }
 
     /* footer */
-    footer { background: #060A08; color: var(--ink-soft); padding: 60px 24px 30px; border-top: 1px solid var(--line); }
+    footer { background: #07070A; color: var(--ink-soft); padding: 60px 24px 30px; border-top: 1px solid var(--line); }
     .foot-inner { max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
     @media (max-width: 720px) { .foot-inner { grid-template-columns: 1fr 1fr; } }
     footer h4 { color: var(--ink); font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
     footer a { color: var(--ink-soft); display: block; margin-bottom: 8px; font-size: 0.92rem; }
     footer a:hover { color: var(--turq-300); }
-    footer .brand-foot { display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; }
-    footer .brand-foot img { height: 30px; width: auto; border-radius: 6px; }
+    footer .brand-foot { display: flex; align-items: center; margin-bottom: 12px; }
+    footer .brand-foot img { height: 38px; width: auto; border-radius: 6px; }
     footer p.tag { font-size: 0.88rem; color: var(--muted); max-width: 320px; }
     .foot-bottom { max-width: var(--max-w); margin: 40px auto 0; padding-top: 22px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.84rem; color: var(--muted); }
 
@@ -299,9 +299,8 @@
 <!-- ───── NAV ───── -->
 <header class="nav">
   <div class="nav-inner">
-    <a href="#top" class="brand">
+    <a href="./" class="brand" aria-label="Arix — home">
       <img src="./arix_logo_yatay.jpeg" alt="Arix" />
-      <span>Arix</span>
     </a>
     <nav class="nav-links">
       <a href="#features">Features</a>
@@ -316,7 +315,7 @@
 <!-- ───── HERO ───── -->
 <section class="hero" id="top">
   <div class="hero-inner">
-    <img src="./arix_logo_yatay.jpeg" alt="Arix logo" class="hero-logo" />
+    <img src="./arix_logo.jpeg" alt="Arix logo" class="hero-logo" />
     <span class="badge"><span class="dot"></span>v0.2.3 · MIT licensed · Open source</span>
     <h1>The <span class="accent">neutral</span> AI coding agent<br/>that lives in your terminal.</h1>
     <p class="lead">
@@ -717,11 +716,10 @@ arix --resume "fix the failing tests"</pre>
 <footer>
   <div class="foot-inner">
     <div>
-      <div class="brand-foot">
+      <a href="./" class="brand-foot" aria-label="Arix — home">
         <img src="./arix_logo_yatay.jpeg" alt="Arix" />
-        <span>Arix</span>
-      </div>
-      <p class="tag">The neutral AI coding agent that lives in your terminal. Built by <a href="https://amirtech.ai">amirtech.ai</a>. MIT licensed.</p>
+      </a>
+      <p class="tag">The neutral AI coding agent that lives in your terminal. Built by <a href="https://amirtech.ai" target="_blank" rel="noopener">amirtech.ai</a>. MIT licensed.</p>
     </div>
     <div>
       <h4>Product</h4>
@@ -739,13 +737,13 @@ arix --resume "fix the failing tests"</pre>
     </div>
     <div>
       <h4>Company</h4>
-      <a href="https://amirtech.ai">amirtech.ai</a>
+      <a href="https://amirtech.ai" target="_blank" rel="noopener">amirtech.ai</a>
       <a href="mailto:info@amirtech.ai">Contact</a>
       <a href="https://github.com/amirtechai" target="_blank" rel="noopener">All projects</a>
     </div>
   </div>
   <div class="foot-bottom">
-    <span>© 2026 amirtech.ai · Arix is open source under the MIT license.</span>
+    <span>© 2026 <a href="https://amirtech.ai" target="_blank" rel="noopener">amirtech.ai</a> · Arix is open source under the MIT license.</span>
     <span>v0.2.3 · <a href="https://github.com/amirtechai/arix/security" target="_blank" rel="noopener" style="color: var(--turq-300);">Security</a></span>
   </div>
 </footer>
